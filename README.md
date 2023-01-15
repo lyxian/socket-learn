@@ -4,6 +4,52 @@
 
 - JavaScript library to create real-time, bi-directional communication between web browsers and a Node.js server
 
+## Bidding System
+
+- Components
+  - Home page
+    - username-only authentication
+  - Products page
+    - view auction products
+  - Add Products page
+    - add name/price of new auction item
+  - Bid page
+  - Navbar
+- Workflow
+  - Home > Products <> Bid , Add Product
+
+**Part 1**
+
+- Components
+  - Home page
+    - stores username in local storage
+  - Products page
+    - .
+  - Add Products page
+    - .
+  - Bid page
+    - .
+  - Navbar
+    - .
+
+**Part 2**
+
+- Components
+  - Home page
+    - .
+  - Products page
+    - .
+  - Add Products page
+    - .
+  - Bid page
+    - .
+  - Navbar
+    - .
+
+**Extra**
+
+- jsonwebtoken
+
 ```
 ##Packages (list required packages & run .scripts/npm-init.sh)
 react-router-dom@6.6.2
