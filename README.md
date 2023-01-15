@@ -18,7 +18,7 @@
 - Workflow
   - Home > Products <> Bid , Add Product
 
-**Part 1**
+**Part 1** https://dev.to/novu/how-to-build-a-real-time-auction-system-with-socketio-and-reactjs-3ble
 
 - Components
   - Home page
@@ -32,7 +32,7 @@
   - Navbar
     - .
 
-**Part 2**
+**Part 2** https://dev.to/novu/how-to-build-a-real-time-auction-system-connecting-socketio-with-react-20kh
 
 - Components
   - Home page
