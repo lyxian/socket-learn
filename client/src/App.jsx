@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, Component } from "react";
 import "./App.css";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 
@@ -13,14 +13,20 @@ import Navbar from "./components/Navbar";
 import Products from "./components/Products";
 
 function App() {
+  const username = localStorage.getItem("userName");
+  console.log(username);
+
   return (
     <Router>
       <div>
         {/* Nav is available at the top of all the pages as a navigation bar */}
         <Navbar socket={socket} />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
+          <Route
+            path="/"
+            element={username ? <Products socket={socket} /> : <Home />}
+          />
+          <Route path="/products" element={<Products socket={socket} />} />
           <Route
             path="/products/add"
             element={<AddProduct socket={socket} />}

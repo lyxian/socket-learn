@@ -22,7 +22,7 @@ const Home = () => {
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           required
-          minLength={6}
+          minLength={1}
         />
         <button className="home__cta">SIGN IN</button>
       </form>
