@@ -1,8 +1,6 @@
 require('dotenv').config();
 const LOCALHOST = process.env.LOCALHOST;
 const PORT = process.env.SERVER_PORT || 4000;
-const CLIENT_PORT = process.env.CLIENT_PORT || 3000;
-const FILE_NAME = 'server/data.json'
 
 const express = require('express');
 const app = express();
@@ -11,98 +9,42 @@ const app = express();
 const http = require('http').Server(app);
 const cors = require('cors');
 const socket = require('socket.io');
-const fs = require('fs');
-
-// Retrieve JSON data and parse into JavaScript object
-const rawData = fs.readFileSync(FILE_NAME);
-const productData = JSON.parse(rawData);
-
 app.use(cors());
 
 console.log(`Checking ${LOCALHOST}:${PORT}`)
 const socketIO = socket(http, {
     cors: {
-        origin: `${LOCALHOST}:${CLIENT_PORT}`
+        // origin: `${LOCALHOST}:${CLIENT_PORT}`
+        origin: "*"
     },
     // cors: true,
     // credentials: true
 });
 
-function addProduct(nameKey, productsArray, last_bidder, new_price) {
-    for (let i = 0; i < productsArray.length; i++) {
-        if (productsArray[i].name === nameKey) {
-            productsArray[i].last_bidder = last_bidder;
-            productsArray[i].price = new_price;
-        }
-    }
-    const stringData = JSON.stringify(productData, null, 2);
-    fs.writeFile(FILE_NAME, stringData, (err) => {
-        console.error(err);
-    });
-    console.log('Added successfully');
-}
+socketIO.on("connection", (socket) => {
+    console.log(`user-${socket.id} connected`);
 
-function removeProduct(nameKey) {
-    const products = productData['products'].filter((product) => {
-        return product.name != nameKey;
-    });
-    // method 1
-    // const index = productsArray.indexOf(nameKey);
-    // console.log(nameKey, index)
-    // method 2
-    // const removed = productsArray.splice(index, 1); 
+    // send a message to the client
+    socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
 
-    productData['products'] = products
-    const stringData = JSON.stringify(productData, null, 2);
-    fs.writeFile(FILE_NAME, stringData, (err) => {
-        console.error(err);
+    // receive a message from the client
+    socket.on("hello from client", (...args) => {
+        // ...
     });
-    console.log('Removed successfully');
-}
 
-socketIO.on('connection', (socket) => {
-    console.log(`⚡: ${socket.id} user just connected!`);
+    socket.on('chat message', (msg, socketId) => {
+        socketIO.emit('chat message', msg);
+        console.log(`message by ${socketId}: ` + msg);
+    });
+
     socket.on('disconnect', () => {
-        console.log(`🔥: A user-${socket.id} disconnected`);
-    });
-    // Handle 'addProduct' event
-    socket.on('addProduct', (data) => {
-        productData['products'].push(data);
-        const stringData = JSON.stringify(productData, null, 2); // indent=2
-        fs.writeFile(FILE_NAME, stringData, (err) => {
-            console.error(err);
-        });
-
-        // Sends back the data after adding a new product
-        socket.broadcast.emit('addProductResponse', data);
-    });
-    // Handle 'bidProduct' event
-    socket.on('bidProduct', (data) => {
-        // console.log(data)
-        addProduct(
-            data.name,
-            productData['products'],
-            data.last_bidder,
-            data.amount
-        );
-
-        // Sends back the data after placing a bid
-        socket.broadcast.emit('bidProductResponse', data);
-    });
-    // Handle 'removeProduct' event
-    socket.on('removeProduct', (data) => {
-        // console.log(data)
-        removeProduct(
-            data.name,
-        );
-
-        // Sends back the data after removing a bid
-        socket.broadcast.emit('removeProductResponse', data);
+        console.log(`user-${socket.id} disconnected`);
     });
 });
 
-app.get('/api', (req, res) => {
-    res.json(productData);
+app.get('/', (req, res) => {
+    // res.send('<h1>Hello world</h1>');
+    res.sendFile(require('path').dirname(__dirname) + `/public/index.html`);
 });
 
 http.listen(PORT, () => {
