@@ -23,8 +23,13 @@ const socketIO = socket(http, {
     // credentials: true
 });
 
+var users = []
+
 socketIO.on("connection", (socket) => {
+    socketIO.emit('user connect', socket.id, users);
     console.log(`user-${socket.id} connected`);
+    users.push(socket.id);
+    console.log(users);
 
     // send a message to the client
     socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
@@ -40,6 +45,9 @@ socketIO.on("connection", (socket) => {
     });
 
     socket.on('disconnect', () => {
+        const index = users.indexOf(socket.id);
+        users.splice(index, 1);
+        socketIO.emit('user disconnect', socket.id);
         console.log(`user-${socket.id} disconnected`);
     });
 });

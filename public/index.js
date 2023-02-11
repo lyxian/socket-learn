@@ -1,3 +1,5 @@
+const maxRecentUserLog = 7
+
 var socket = io();
 
 // send a message to the server
@@ -7,6 +9,60 @@ socket.emit("hello from client", 5, "6", { 7: Uint8Array.from([8]) });
 socket.on("hello from server", (...args) => {
     console.log(`Connection to localhost successful by User-${socket.id}`);
     // ...
+});
+
+// receive a message from the server
+socket.on("user connect", (userId, otherUsers) => {
+    console.log(`User-${userId} connected`);
+    var item = document.createElement("li");
+    item.id = `user_${userId}`;
+    item.textContent = userId;
+    users.appendChild(item);
+
+    if (otherUsers) {
+        var children = users.children;
+        for (var i = 0; i < children.length; i++) {
+            var childId = children[i].id.split('_')[1];
+            for (var j = 0; j < otherUsers.length; j++) {
+                if (otherUsers[j] === childId) {
+                    var index = otherUsers.indexOf(childId);
+                    otherUsers.splice(index, 1);
+                }
+            }
+        }
+        for (i in otherUsers) {
+            var otherUser = document.createElement("li");
+            var otherUserId = otherUsers[i];
+            otherUser.id = `user_${otherUserId}`
+            otherUser.textContent = otherUserId
+            users.appendChild(otherUser);
+        }
+    }
+
+    var item = document.createElement("li");
+    item.textContent = `${userId} connected`;
+    recent.appendChild(item);
+
+    while (recent.childElementCount >= maxRecentUserLog) {
+        recent.removeChild(recent.firstElementChild);
+    }
+});
+
+// receive a message from the server
+socket.on("user disconnect", (userId) => {
+    console.log(`User-${userId} disconnected`)
+    var item = document.getElementById(`user_${userId}`);
+    if (item) {
+        users.removeChild(item);
+    }
+
+    var item = document.createElement("li");
+    item.textContent = `${userId} disconnected`;
+    recent.appendChild(item);
+
+    while (recent.childElementCount >= maxRecentUserLog) {
+        recent.removeChild(recent.firstElementChild);
+    }
 });
 
 var form = document.getElementById("form");
