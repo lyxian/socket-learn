@@ -1,6 +1,6 @@
 require('dotenv').config();
 const LOCALHOST = process.env.LOCALHOST;
-const PORT = process.env.SERVER_PORT || 4000;
+const PORT = process.env.CLIENT_PORT || 3000;
 
 const express = require('express');
 const app = express();
@@ -10,6 +10,8 @@ const http = require('http').Server(app);
 const cors = require('cors');
 const socket = require('socket.io');
 app.use(cors());
+
+app.use(express.static('public'));
 
 console.log(`Checking ${LOCALHOST}:${PORT}`)
 const socketIO = socket(http, {
