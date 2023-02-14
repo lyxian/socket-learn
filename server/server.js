@@ -26,10 +26,13 @@ const socketIO = socket(http, {
 var users = []
 
 socketIO.on("connection", (socket) => {
-    socketIO.emit('user connect', socket.id, users);
-    console.log(`user-${socket.id} connected`);
-    users.push(socket.id);
-    console.log(users);
+    socket.on("new username", (username) => {
+        // console.log(username);
+        socketIO.emit('user connect', username, users);
+        console.log(`user-${username} connected`);
+        users.push(username);
+        console.log(users);
+    });
 
     // send a message to the client
     socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });

@@ -1,5 +1,8 @@
 const maxRecentUserLog = 7
 
+const NEW = document.getElementById("new");
+const APP = document.getElementById("app");
+
 var socket = io();
 
 // send a message to the server
@@ -13,6 +16,7 @@ socket.on("hello from server", (...args) => {
 
 // receive a message from the server
 socket.on("user connect", (userId, otherUsers) => {
+
     console.log(`User-${userId} connected`);
     var item = document.createElement("li");
     item.id = `user_${userId}`;
@@ -20,23 +24,22 @@ socket.on("user connect", (userId, otherUsers) => {
     users.appendChild(item);
 
     if (otherUsers) {
-        var children = users.children;
-        for (var i = 0; i < children.length; i++) {
-            var childId = children[i].id.split('_')[1];
+        var children = users.childNodes;
+        children.forEach((child) => {
+            var childId = child.id.split('_')[1];
             for (var j = 0; j < otherUsers.length; j++) {
                 if (otherUsers[j] === childId) {
                     var index = otherUsers.indexOf(childId);
                     otherUsers.splice(index, 1);
                 }
             }
-        }
-        for (i in otherUsers) {
+        })
+        otherUsers.forEach((otherUserId) => {
             var otherUser = document.createElement("li");
-            var otherUserId = otherUsers[i];
             otherUser.id = `user_${otherUserId}`
             otherUser.textContent = otherUserId
             users.appendChild(otherUser);
-        }
+        })
     }
 
     var item = document.createElement("li");
@@ -73,6 +76,53 @@ form.addEventListener("submit", function (e) {
     if (input.value) {
         socket.emit("chat message", input.value, socket.id);
         input.value = "";
+    }
+});
+
+var formName = document.getElementById("formName");
+var inputName = document.getElementById("inputName");
+
+formName.addEventListener("submit", function (e) {
+    e.preventDefault();
+    userId = inputName.value
+    if (userId) {
+        socket.emit("new username", userId);
+        APP.style.display = "flex";
+        NEW.style.display = "none";
+        // socket.on("user connect", (userId, otherUsers) => {
+        //     console.log(`User-${userId} connected`);
+        //     var item = document.createElement("li");
+        //     item.id = `user_${userId}`;
+        //     item.textContent = userId;
+        //     users.appendChild(item);
+
+        //     if (otherUsers) {
+        //         var children = users.childNodes;
+        //         children.forEach((child) => {
+        //             var childId = child.id.split('_')[1];
+        //             for (var j = 0; j < otherUsers.length; j++) {
+        //                 if (otherUsers[j] === childId) {
+        //                     var index = otherUsers.indexOf(childId);
+        //                     otherUsers.splice(index, 1);
+        //                 }
+        //             }
+        //         })
+        //         otherUsers.forEach((otherUserId) => {
+        //             var otherUser = document.createElement("li");
+        //             otherUser.id = `user_${otherUserId}`
+        //             otherUser.textContent = otherUserId
+        //             users.appendChild(otherUser);
+        //         })
+        //     }
+
+        //     var item = document.createElement("li");
+        //     item.textContent = `${userId} connected`;
+        //     recent.appendChild(item);
+
+        //     while (recent.childElementCount >= maxRecentUserLog) {
+        //         recent.removeChild(recent.firstElementChild);
+        //     }
+        // });
     }
 });
 

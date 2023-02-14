@@ -4,9 +4,42 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-.app {
-    /* height: 40rem; */
+#new {
+    display: block;
+}
+
+
+.home__form {
+    width: 100%;
+    height: 80vh;
+    padding: 20px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+.home__input {
+    width: 70%;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 15px 0;
+    outline: none;
+    border: 1px solid #576f72;
+}
+.home__cta {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background-color: rgb(67, 143, 67);
+}
+
+#app {
+    display: none;
+    /* display: flex; */
     /* flex-direction: row; */
     /* min-height: 90vh; */
 }

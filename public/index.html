@@ -5,7 +5,20 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div class="app">
+    <div id="new">
+      <form id="formName" class="home__form" action="#">
+        <label htmlFor="username">Enter your username</label>
+        <input
+          id="inputName"
+          type="text"
+          class="home__input"
+          minlength="{1}"
+          required
+        />
+        <button class="home__cta">SIGN IN</button>
+      </form>
+    </div>
+    <div id="app">
       <div class="userBox">
         <h2>Online Users</h2>
         <hr />
