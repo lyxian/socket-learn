@@ -87,6 +87,11 @@ hr {
     padding: 0;
 }
 
+#users > li > span {
+    font-size: 10px;
+    margin-left: 10px;
+}
+
 .messageBox {
     width: 80%;
     position: fixed;

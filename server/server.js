@@ -24,6 +24,7 @@ const socketIO = socket(http, {
 });
 
 var users = []
+var sockets = {}
 
 socketIO.on("connection", (socket) => {
     socket.on("new username", (username) => {
@@ -31,27 +32,45 @@ socketIO.on("connection", (socket) => {
         socketIO.emit('user connect', username, users);
         console.log(`user-${username} connected`);
         users.push(username);
-        console.log(users);
+        sockets[socket.id] = username;
+        console.log(users, sockets);
     });
 
     // send a message to the client
-    socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
+    // socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
 
-    // receive a message from the client
-    socket.on("hello from client", (...args) => {
-        // ...
+    // // receive a message from the client
+    // socket.on("hello from client", (...args) => {
+    //     // ...
+    // });
+
+    socket.on('typing', (isTyping, userId) => {
+        if (isTyping) {
+            socket.broadcast.emit('typing', isTyping, userId);
+            // console.log(`${userId} is typing`);
+        } else {
+            socket.broadcast.emit('typing', isTyping, userId);
+        }
     });
 
-    socket.on('chat message', (msg, socketId) => {
-        socketIO.emit('chat message', msg);
-        console.log(`message by ${socketId}: ` + msg);
+    socket.on('chat message', (msg, userId) => {
+        socket.broadcast.emit('chat message', msg);
+        // socketIO.emit('chat message', msg);
+        console.log(`message by ${userId}: ` + msg);
     });
 
     socket.on('disconnect', () => {
-        const index = users.indexOf(socket.id);
-        users.splice(index, 1);
-        socketIO.emit('user disconnect', socket.id);
-        console.log(`user-${socket.id} disconnected`);
+        username = sockets[socket.id];
+        if (username) {
+            const index = users.indexOf(username);
+            users.splice(index, 1);
+            socketIO.emit('user disconnect', username);
+            console.log(`user-${username} disconnected`);
+            delete sockets[socket.id];
+            console.log(users, sockets);
+        } else {
+            console.log(socket.id + ' not in list');
+        }
     });
 });
 
