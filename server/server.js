@@ -11,7 +11,7 @@ const cors = require('cors');
 const socket = require('socket.io');
 app.use(cors());
 
-app.use(express.static('public'));
+app.use(express.static('server/static'));
 
 console.log(`Checking ${LOCALHOST}:${PORT}`)
 const socketIO = socket(http, {
@@ -75,8 +75,8 @@ socketIO.on("connection", (socket) => {
 });
 
 app.get('/', (req, res) => {
-    // res.send('<h1>Hello world</h1>');
-    res.sendFile(require('path').dirname(__dirname) + `/public/index.html`);
+    // res.sendFile(__dirname + '/templates/index.html');
+    res.sendFile(__dirname + '/templates/game.html');
 });
 
 http.listen(PORT, () => {

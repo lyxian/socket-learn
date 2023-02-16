@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Old Maid</title>
+    <link rel="stylesheet" href="game.css" />
+  </head>
+  <body>
+    <div id="new">
+      <form id="formName" class="home__form" action="#">
+        <label htmlFor="username">Enter your username</label>
+        <input
+          id="inputName"
+          type="text"
+          class="home__input"
+          minlength="{1}"
+          required
+        />
+        <button class="home__cta">SIGN IN</button>
+      </form>
+    </div>
+    <div id="app">
+      <div class="settings">
+        <form id="formGame" class="home__form" action="#">
+          <span id="user_name"></span>
+          <div class="formButtons">
+            <input id="select_easy" type="button" value="Easy Mode" />
+            <input id="select_hard" type="button" value="Hard Mode" />
+          </div>
+          <span id="user_choice"></span>
+          <button class="home__cta">Start Game</button>
+        </form>
+      </div>
+      <div class="gameArea"></div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
