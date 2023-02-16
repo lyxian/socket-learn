@@ -1,6 +1,7 @@
 require('dotenv').config();
 const LOCALHOST = process.env.LOCALHOST;
 const PORT = process.env.CLIENT_PORT || 3000;
+const hands = require('./game');
 
 const express = require('express');
 const app = express();
@@ -36,13 +37,10 @@ socketIO.on("connection", (socket) => {
         console.log(users, sockets);
     });
 
-    // send a message to the client
-    // socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
-
-    // // receive a message from the client
-    // socket.on("hello from client", (...args) => {
-    //     // ...
-    // });
+    socket.on('start game', (mode) => {
+        console.log(`Starting ${mode} mode...`)
+        socketIO.emit('start game', hands);
+    })
 
     socket.on('typing', (isTyping, userId) => {
         if (isTyping) {
@@ -76,6 +74,7 @@ socketIO.on("connection", (socket) => {
 
 app.get('/', (req, res) => {
     // res.sendFile(__dirname + '/templates/index.html');
+    // res.sendFile(__dirname + '/templates/game0.html');
     res.sendFile(__dirname + '/templates/game.html');
 });
 
