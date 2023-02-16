@@ -1,13 +1,38 @@
 const NEW = document.getElementById("new");
 const APP = document.getElementById("app");
+const SETTINGS = document.getElementById("app_settings");
+const GAMEAREA = document.getElementById("app_gameArea");
 
 const button_easy = document.getElementById("select_easy");
 const button_hard = document.getElementById("select_hard");
 const user_choice = document.getElementById("user_choice");
 const user_name = document.getElementById("user_name");
 
+const playerOrder = {
+    0: 'top',
+    1: 'left',
+    2: 'btm',
+    3: 'right',
+}
+
 var currentUserId;
 var socket = io();
+
+// receive a message from the server
+socket.on("start game", (hands) => {
+    console.log('Game start');
+    // hide settings and show hands
+    SETTINGS.style.display = "none";
+    GAMEAREA.style.display = "flex";
+
+    hands.forEach((hand, idx) => {
+        console.log(hand, idx);
+        var playerDiv = document.getElementById(playerOrder[idx] + 'Player');
+        playerDiv.innerText = hand;
+        // var item = document.createElement("li");
+        // players.appendChild(item);
+    });
+})
 
 // receive a message from the server
 socket.on("user connect", (userId, otherUsers) => {
@@ -91,7 +116,7 @@ formGame.addEventListener("submit", function (e) {
     e.preventDefault();
     if (user_choice.innerText) {
         var mode = user_choice.innerText.split(' ')[3];
-        alert(mode);
+        socket.emit("start game", mode);
     } else {
         alert('No choice selected');
     }

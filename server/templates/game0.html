@@ -1,49 +1,46 @@
-<!DOCTYPE html>
 <html>
   <head>
     <title>Old Maid</title>
     <link rel="stylesheet" href="game.css" />
   </head>
   <body>
-    <div id="new">
+    <div id="new" style="display: none">
       <form id="formName" class="home__form" action="#">
-        <label htmlFor="username">Enter your username</label>
+        <label htmlfor="username">Enter your username</label>
         <input
           id="inputName"
           type="text"
           class="home__input"
           minlength="{1}"
-          required
+          required=""
         />
         <button class="home__cta">SIGN IN</button>
       </form>
     </div>
-    <div id="app">
-      <div id="app_settings">
+    <div id="app" style="display: flex">
+      <div id="app_settings" style="display: none">
         <form id="formGame" class="home__form" action="#">
-          <span id="user_name"></span>
+          <span id="user_name">Welcome, <b>qwe</b></span>
           <div class="formButtons">
             <input id="select_easy" type="button" value="Easy Mode" />
             <input id="select_hard" type="button" value="Hard Mode" />
           </div>
-          <span id="user_choice"></span>
+          <span id="user_choice">You have selected EASY mode</span>
           <button class="home__cta">Start Game</button>
         </form>
       </div>
-      <div id="app_gameArea">
+      <div id="app_gameArea" style="display: flex">
         <div class="playerHands">
           <div class="topArea">
-            <div id="topPlayer"></div>
+            <div id="topPlayer">3♦,6♣,7♥,8♥,9♣,10♠,J♣</div>
           </div>
           <div class="midArea">
-            <div id="leftPlayer"></div>
-            <div id="rightPlayer"></div>
+            <div id="leftPlayer">A♣,3♥,5♠,6♠,7♠,9♠,J♦,Q♦,K♦</div>
+            <div id="rightPlayer">2♦,Q♣</div>
           </div>
           <div class="btmArea">
-            <div id="btmPlayer"></div>
+            <div id="btmPlayer">A♥,2♠,5♣,8♦,10♥,Q♥,K♣</div>
           </div>
-          <hr />
-          <div class="playerChoice">Player Choice:</div>
         </div>
       </div>
     </div>

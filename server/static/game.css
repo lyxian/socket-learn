@@ -1,7 +1,16 @@
+html, body {
+    height: 100%;
+}
+
 body {
     margin: 0;
-    padding-bottom: 3rem;
+    /* padding-bottom: 3rem; */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; */
 }
 
 #new {
@@ -39,8 +48,9 @@ body {
 
 #app {
     display: none;
-    /* display: flex; */
-    /* flex-direction: row; */
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     /* min-height: 90vh; */
 }
 
@@ -67,8 +77,40 @@ body {
     margin: 5px;
 }
 
+#app_settings {
+    display: flex;
+    /* flex-grow: 1; */
+    width: 100%;
+}
+#app_gameArea {
+    display: none;
+    /* flex-grow: 1; */
+    /* flex: 2; */
+    /* margin: 100px; */
+    width: 80%;
+    height: 80%;
+    border: 3px solid lightgray;
+}
+
+.playerHands {
+    width: 100%;
+}
+.topArea, .midArea, .btmArea {
+    width: 100%;
+    height: 30%;
+    display: flex;
+}
+.topArea, .btmArea {
+    align-items: center;
+    justify-content: center;
+}
+.midArea {
+    align-items: center;
+    justify-content: space-between;
+}
+
 hr {
-    margin: 10px;
+    margin: 0px;
     border: 1px solid black;
     /* border-radius: 5px; */
 }
