@@ -20,7 +20,7 @@
     <div id="app" style="display: flex">
       <div id="app_settings" style="display: none">
         <form id="formGame" class="home__form" action="#">
-          <span id="user_name">Welcome, <b>qwe</b></span>
+          <span id="user_name">Welcome, <b>q</b></span>
           <div class="formButtons">
             <input id="select_easy" type="button" value="Easy Mode" />
             <input id="select_hard" type="button" value="Hard Mode" />
@@ -32,14 +32,21 @@
       <div id="app_gameArea" style="display: flex">
         <div class="playerHands">
           <div class="topArea">
-            <div id="topPlayer">3♦,6♣,7♥,8♥,9♣,10♠,J♣</div>
+            <div id="topPlayer">A♣,2♣,3♦,4♣,5♣,6♦,8♣,9♥,10♥</div>
           </div>
           <div class="midArea">
-            <div id="leftPlayer">A♣,3♥,5♠,6♠,7♠,9♠,J♦,Q♦,K♦</div>
-            <div id="rightPlayer">2♦,Q♣</div>
+            <div id="leftPlayer">3♥,4♥,5♦,6♣,7♣</div>
+            <div id="rightPlayer">A♦,4♦,6♠,10♠,J♠,K♥</div>
           </div>
           <div class="btmArea">
-            <div id="btmPlayer">A♥,2♠,5♣,8♦,10♥,Q♥,K♣</div>
+            <div id="btmPlayer">2♥,4♠,6♥,7♥,8♦,9♠,J♦,Q♦,K♦</div>
+          </div>
+          <hr />
+          <div class="playerChoice">
+            <span>Player Choice:</span>
+            <button class="choiceButton" id="buttonTop">top</button>
+            <button class="choiceButton" id="buttonLeft">left</button>
+            <button class="choiceButton" id="buttonRight">right</button>
           </div>
         </div>
       </div>

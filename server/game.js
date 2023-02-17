@@ -14,15 +14,6 @@ function randomQueen() {
     return 'Q' + Suits[Math.floor(Math.random() * 4)];
 }
 
-const queenToRemove = randomQueen()
-let shuffled = Deck
-    .map(value => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value)
-    .filter(card => card !== queenToRemove)
-
-// console.log(shuffled, shuffled.length)
-
 function distributeDeck(deck) {
     var hand = [];
     const handSize = 13;
@@ -31,8 +22,6 @@ function distributeDeck(deck) {
     }
     return hand
 }
-
-let hands = distributeDeck(shuffled)
 
 const mapper = (val, idx) => ({ [val]: idx });
 const deckOrder = Object.assign(...Deck.map(mapper));
@@ -47,7 +36,8 @@ function sortHand(hand) {
 // console.log(sortHand(hands[0]))
 
 function removePairs(hand) {
-    var ranks = hand.map(val => val[0])
+    console.log(hand);
+    var ranks = hand.map(val => val ? val[0] : null);
     var counts = {};
     for (var i = 0, l = ranks.length; i < l; i++) {
         counts[ranks[i]] = (counts[ranks[i]] || 0) + 1;
@@ -71,8 +61,43 @@ function removePairs(hand) {
     return hand
 }
 
-hands = hands.map(hand => removePairs(sortHand(hand)))
-module.exports = hands;
+function randomCardFromHand(hand) {
+    return hand[Math.floor(Math.random() * hand.length)];
+}
+
+function drawFromHand(ownHand, otherHand) {
+    console.log(otherHand);
+    if (otherHand.length) {
+        var randomCard = randomCardFromHand(otherHand);
+        console.log(`Taking ${randomCard}`);
+        ownHand.push(randomCard);
+        otherHand = otherHand.filter(card => card !== randomCard);
+        ownHand = removePairs(sortHand(ownHand));
+        return [ownHand, otherHand, randomCard]
+    }
+    return [ownHand, otherHand, false]
+}
+
+// console.log(hands[0], hands[1]);
+// [hands[0], hands[1]] = drawFromHand(hands[0], hands[1])
+// console.log(hands[0], hands[1]);
+
+// console.log(Array.from({ length: 5 }, (_, i) => i + 1));
+// console.log(Array(10).fill(1).map((_, i) => i + 1))
+
+function newGame(Deck) {
+    const queenToRemove = randomQueen()
+    let shuffled = Deck
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+        .filter(card => card !== queenToRemove)
+    let hands = distributeDeck(shuffled)
+    hands = hands.map(hand => removePairs(sortHand(hand)))
+    return hands
+}
+
+module.exports = { Deck, drawFromHand, newGame };
 
 // const winningArray = [
 //     [35, 36, 37, 38],

@@ -35,6 +35,20 @@ socket.on("start game", (hands) => {
 })
 
 // receive a message from the server
+socket.on("draw end", (hands, message) => {
+    console.log('Draw end');
+
+    hands.forEach((hand, idx) => {
+        console.log(hand, idx);
+        var playerDiv = document.getElementById(playerOrder[idx] + 'Player');
+        playerDiv.innerText = hand;
+        // var item = document.createElement("li");
+        // players.appendChild(item);
+    });
+    alert(message);
+})
+
+// receive a message from the server
 socket.on("user connect", (userId, otherUsers) => {
     if (!currentUserId) return;
 
@@ -127,4 +141,26 @@ formGame.addEventListener("submit", function (e) {
     //     NEW.style.display = "none";
     //     user_name.innerHTML = `Welcome, <b>${currentUserId}</b>`;
     // }
+});
+
+const buttonTop = document.getElementById("buttonTop");
+const buttonLeft = document.getElementById("buttonLeft");
+const buttonRight = document.getElementById("buttonRight");
+const buttonPass = document.getElementById("buttonPass");
+
+buttonTop.addEventListener("click", (e) => {
+    e.preventDefault();
+    socket.emit("draw top");
+});
+buttonLeft.addEventListener("click", (e) => {
+    e.preventDefault();
+    socket.emit("draw left");
+});
+buttonRight.addEventListener("click", (e) => {
+    e.preventDefault();
+    socket.emit("draw right");
+});
+buttonPass.addEventListener("click", (e) => {
+    e.preventDefault();
+    socket.emit("pass");
 });
