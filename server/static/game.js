@@ -49,6 +49,12 @@ socket.on("draw end", (hands, message) => {
 })
 
 // receive a message from the server
+socket.on("game end", (player) => {
+    console.log('Game end');
+    alert(`${player} player lost`);
+})
+
+// receive a message from the server
 socket.on("user connect", (userId, otherUsers) => {
     if (!currentUserId) return;
 

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const LOCALHOST = process.env.LOCALHOST;
 const PORT = process.env.CLIENT_PORT || 3000;
-const { Deck, drawFromHand, newGame } = require('./game');
+const { Deck, drawFromHand, newGame, playerLost } = require('./game');
 
 const express = require('express');
 const app = express();
@@ -63,7 +63,13 @@ socketIO.on("connection", (socket) => {
                 idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                 otherPlayer = playerOrder[idx];
                 [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
+                counter = 0
                 while (!randomCard) {
+                    if (counter > 10) {
+                        socket.emit('game end', player);
+                        return
+                    }
+                    counter += 1
                     idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                     otherPlayer = playerOrder[idx];
                     [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
@@ -87,7 +93,13 @@ socketIO.on("connection", (socket) => {
                     idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                     otherPlayer = playerOrder[idx];
                     [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
+                    counter = 0
                     while (!randomCard) {
+                        if (counter > 10) {
+                            socket.emit('game end', player);
+                            return
+                        }
+                        counter += 1
                         idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                         otherPlayer = playerOrder[idx];
                         [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
@@ -114,7 +126,13 @@ socketIO.on("connection", (socket) => {
                     idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                     otherPlayer = playerOrder[idx];
                     [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
+                    counter = 0
                     while (!randomCard) {
+                        if (counter > 10) {
+                            socket.emit('game end', player);
+                            return
+                        }
+                        counter += 1
                         idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                         otherPlayer = playerOrder[idx];
                         [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
@@ -141,7 +159,13 @@ socketIO.on("connection", (socket) => {
                     idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                     otherPlayer = playerOrder[idx];
                     [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);
+                    counter = 0
                     while (!randomCard) {
+                        if (counter > 10) {
+                            socket.emit('game end', player);
+                            return
+                        }
+                        counter += 1
                         idx = Array.from({ length: 4 }, (_, i) => i).filter(val => val !== playerOrder[player])[Math.floor(Math.random() * 3)];
                         otherPlayer = playerOrder[idx];
                         [hands[playerOrder[player]], hands[playerOrder[otherPlayer]], randomCard] = drawFromHand(hands[playerOrder[player]], hands[playerOrder[otherPlayer]]);

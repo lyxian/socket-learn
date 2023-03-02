@@ -36,14 +36,13 @@ function sortHand(hand) {
 // console.log(sortHand(hands[0]))
 
 function removePairs(hand) {
-    console.log(hand);
+    // console.log(hand);
     var ranks = hand.map(val => val ? val[0] : null);
     var counts = {};
     for (var i = 0, l = ranks.length; i < l; i++) {
         counts[ranks[i]] = (counts[ranks[i]] || 0) + 1;
     }
 
-    // console.log(counts)
     var remainingRanks = [... new Set(ranks.filter(function (item) {
         return ![2, 4].includes(counts[item]);
     }))]
@@ -55,26 +54,28 @@ function removePairs(hand) {
             indexToRemove.push(i)
         }
     }
-    for (idx of indexToRemove) {
+    for (idx of indexToRemove.reverse()) {
         hand.splice(idx, 2)
     }
     return hand
 }
+
+console.log(newGame(Deck))
 
 function randomCardFromHand(hand) {
     return hand[Math.floor(Math.random() * hand.length)];
 }
 
 function drawFromHand(ownHand, otherHand) {
-    console.log(otherHand);
     if (otherHand.length) {
         var randomCard = randomCardFromHand(otherHand);
-        console.log(`Taking ${randomCard}`);
+        // console.log(`Taking ${randomCard}`);
         ownHand.push(randomCard);
         otherHand = otherHand.filter(card => card !== randomCard);
         ownHand = removePairs(sortHand(ownHand));
         return [ownHand, otherHand, randomCard]
     }
+    console.log(otherHand);
     return [ownHand, otherHand, false]
 }
 
@@ -97,7 +98,11 @@ function newGame(Deck) {
     return hands
 }
 
-module.exports = { Deck, drawFromHand, newGame };
+function playerLost(hand) {
+    return hand.length === 1 && hand[0][0] === 'Q';
+}
+
+module.exports = { Deck, drawFromHand, newGame, playerLost };
 
 // const winningArray = [
 //     [35, 36, 37, 38],
