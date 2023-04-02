@@ -46,6 +46,11 @@
   - Navbar
     - .
 
+**Card-Shuffle** https://blog.devgenius.io/react-js-tutorial-how-to-implement-a-shuffle-card-game-from-scratch-c994277d38b3
+
+- card generator
+- random cards
+
 **Extra**
 
 - jsonwebtoken
