@@ -62,5 +62,6 @@ express@4.18.1
 nodemon@2.0.20
 react@18.2.0
 react-dom@18.2.0
+uuid@8.3.2
 ##Packages
 ```

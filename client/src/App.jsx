@@ -1,44 +1,31 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+import Messages from "./Messages";
+import MessageInput from "./MessageInput";
+
 import "./App.css";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-
-import socketIO from "socket.io-client";
-const socket = socketIO.connect(`${process.env.LOCALHOST}:${process.env.PORT}`);
-
-import Button from "./components/Button";
-import AddProduct from "./components/AddProduct";
-import BidProduct from "./components/BidProduct";
-import Home from "./components/Home";
-import Navbar from "./components/Navbar";
-import Products from "./components/Products";
 
 function App() {
-  const username = localStorage.getItem("userName");
-  console.log(username);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io(`http://${window.location.hostname}:4000`);
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, [setSocket]);
 
   return (
-    <Router>
-      <div>
-        {/* Nav is available at the top of all the pages as a navigation bar */}
-        <Navbar socket={socket} />
-        <Routes>
-          <Route
-            path="/"
-            element={username ? <Products socket={socket} /> : <Home />}
-          />
-          <Route path="/products" element={<Products socket={socket} />} />
-          <Route
-            path="/products/add"
-            element={<AddProduct socket={socket} />}
-          />
-          {/* Uses dynamic routing */}
-          <Route
-            path="/products/bid/:name/:price"
-            element={<BidProduct socket={socket} />}
-          />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <header className="app-header">React Chat</header>
+      {socket ? (
+        <div className="chat-container">
+          <Messages socket={socket} />
+          <MessageInput socket={socket} />
+        </div>
+      ) : (
+        <div>Not Connected</div>
+      )}
+    </div>
   );
 }
 
