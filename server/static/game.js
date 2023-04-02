@@ -18,6 +18,26 @@ const playerOrder = {
 var currentUserId;
 var socket = io();
 
+function handToCards(hand, player) {
+    let handHtml = document.createElement("div");
+    if (player == 'left') {
+        handHtml.className = "handCardsLeft";
+    } else if (player == 'right') {
+        handHtml.className = "handCardsRight";
+    } else {
+        handHtml.className = "handCards";
+    }
+    hand.forEach(card => {
+        var item = document.createElement("div");
+        var cardValue = document.createElement("span");
+        cardValue.innerText = card;
+        item.className = 'Card';
+        item.appendChild(cardValue);
+        handHtml.appendChild(item);
+    })
+    return handHtml
+}
+
 // receive a message from the server
 socket.on("start game", (hands) => {
     console.log('Game start');
@@ -26,11 +46,11 @@ socket.on("start game", (hands) => {
     GAMEAREA.style.display = "flex";
 
     hands.forEach((hand, idx) => {
-        console.log(hand, idx);
+        // console.log(hand, idx);
+        // console.log(handToCards(hand));
         var playerDiv = document.getElementById(playerOrder[idx] + 'Player');
-        playerDiv.innerText = hand;
-        // var item = document.createElement("li");
-        // players.appendChild(item);
+        playerDiv.appendChild(handToCards(hand, playerOrder[idx]));
+        console.log(playerDiv);
     });
 })
 
@@ -39,11 +59,14 @@ socket.on("draw end", (hands, message) => {
     console.log('Draw end');
 
     hands.forEach((hand, idx) => {
-        console.log(hand, idx);
         var playerDiv = document.getElementById(playerOrder[idx] + 'Player');
-        playerDiv.innerText = hand;
-        // var item = document.createElement("li");
-        // players.appendChild(item);
+        // console.log(hand, idx);
+        // playerDiv.innerText = hand;
+        // currentHand = playerDiv.querySelector('ul');
+        currentHand = playerDiv.querySelector('div');
+        playerDiv.removeChild(currentHand);
+        playerDiv.appendChild(handToCards(hand, playerOrder[idx]));
+        // console.log(playerDiv);
     });
     alert(message);
 })

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const DEBUG = true;
 const LOCALHOST = process.env.LOCALHOST;
 const PORT = process.env.CLIENT_PORT || 3000;
 const { Deck, drawFromHand, newGame, playerLost } = require('./game');
@@ -41,6 +42,12 @@ const sequence = ['left', 'top', 'right']
 let message, randomCard
 
 socketIO.on("connection", (socket) => {
+    if (DEBUG) {
+        hands = newGame(Deck);
+        console.log(`Starting default mode...`)
+        socket.emit('start game', hands);
+    }
+
     socket.on("new username", (username) => {
         // console.log(username);
         socketIO.emit('user connect', username, users);
