@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import PlayerInfo from "./PlayerInfo";
+import { sortHand } from "../hooks/DeckProps";
 
 const PlayerHand = ({ cards, name, score }) => {
   // const [playerCards, setPlayerCards] = useState(cards);
@@ -16,14 +17,14 @@ const PlayerHand = ({ cards, name, score }) => {
   };
 
   return (
-    <>
+    <div>
       <div className="hand-container">
-        {cards.map((card, index) => (
+        {sortHand(cards).map((card, index) => (
           <Card key={index} card={card} />
         ))}
       </div>
       <PlayerInfo name={name} score={score} />
-    </>
+    </div>
   );
 };
 

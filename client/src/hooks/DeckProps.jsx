@@ -1,4 +1,4 @@
-import { Deck } from "../data";
+import { Deck, deckOrder } from "../data";
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -7,16 +7,16 @@ function shuffle(array) {
   }
 }
 
-function distributeDeck(deck) {
+export function distributeDeck(deck, handSize) {
+  console.log("distribute deck");
   var hand = [];
-  const handSize = 13;
-  for (let i = 0; i < deck.length; i += handSize) {
-    hand.push(deck.slice(i, i + handSize));
+  for (let i = 0; i < handSize * 4; i += handSize) {
+    hand.push(deck.splice(0, handSize));
   }
   return hand;
 }
 
-function sortHand(hand) {
+export function sortHand(hand) {
   return hand.sort((x, y) => {
     if (deckOrder[x] < deckOrder[y]) return -1;
     if (deckOrder[x] > deckOrder[y]) return 1;
@@ -29,7 +29,8 @@ function randomCardFromHand(hand) {
 }
 
 export function drawFromDeck(deck) {
-  return deck.splice(0, 1)[0];
+  if (deck.length) return deck.splice(0, 1)[0];
+  return null;
 }
 
 function newGame(deck) {

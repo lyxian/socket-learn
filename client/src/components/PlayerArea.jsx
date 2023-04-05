@@ -1,16 +1,33 @@
 import React, { useState, useContext } from "react";
 // import Card from "./Card";
 // import PlayerInfo from "./PlayerInfo";
-import { newDeck, drawFromDeck } from "../hooks/DeckProps";
-import { CardContext } from "../App";
+import { drawFromDeck } from "../hooks/DeckProps";
+import { CardContext, GameContext } from "../App";
 
 const PlayerArea = () => {
-  const { cards, setCards } = useContext(CardContext);
+  // const { cards, setCards } = useContext(CardContext);
+  const { game, setGame, deck } = useContext(GameContext);
+  const [turn, setTurn] = useState(0);
+
   const drawEvent = (e) => {
-    let card = drawFromDeck(newDeck);
-    alert(`You drawn ${card}`);
-    setCards([...cards, card]);
+    let card = drawFromDeck(deck);
+    if (card) {
+      console.log(turn, card);
+      // alert(`You drawn ${card}`);
+      setGame(
+        game.map((player) => {
+          if (player.index === turn % 4) {
+            player.cards = [...player.cards, card];
+          }
+          return player;
+        })
+      );
+      setTurn(turn + 1);
+    } else {
+      console.log("Deck has no more cards.");
+    }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     localStorage.setItem("userName", userName);

@@ -20,7 +20,8 @@
     background-color: white;
     /* flex-grow: 1; */
     width: 50%;
-    justify-content: center;
+    /* justify-content: center; */
+    justify-content: space-around;
 }
 
 .hand-container {
