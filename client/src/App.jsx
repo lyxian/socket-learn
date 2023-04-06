@@ -50,9 +50,7 @@ function App() {
           <PlayerHand cards={game["bot_2"].cards} name="bot_2" score="0" />
           <PlayerHand cards={game["bot_3"].cards} name="bot_3" score="0" /> */}
         </div>
-        <div className="play-area-wrapper">
-          <PlayerArea />
-        </div>
+        <PlayerArea />
         {/* </CardContext.Provider> */}
       </GameContext.Provider>
     </div>

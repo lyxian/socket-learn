@@ -1,15 +1,28 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 // import Card from "./Card";
 // import PlayerInfo from "./PlayerInfo";
 import { drawFromDeck } from "../hooks/DeckProps";
 import { CardContext, GameContext } from "../App";
+import { Ranks } from "../data";
 
 const PlayerArea = () => {
   // const { cards, setCards } = useContext(CardContext);
   const { game, setGame, deck } = useContext(GameContext);
   const [turn, setTurn] = useState(0);
+  const [currentPlayer, setCurrentPlayer] = useState(game[0].name);
+  const [otherPlayers, setOtherPlayers] = useState([]);
+  const [rankChoice, setRankChoice] = useState([]);
+  const [selectedPlayer, setSelectedPlayer] = useState();
 
-  const drawEvent = (e) => {
+  useEffect(() => {
+    setCurrentPlayer(
+      game.find((player) => {
+        return player.index === turn % 4;
+      }).name
+    );
+  }, [turn]);
+
+  const drawDeckEvent = (e) => {
     let card = drawFromDeck(deck);
     if (card) {
       console.log(turn, card);
@@ -28,6 +41,41 @@ const PlayerArea = () => {
     }
   };
 
+  const drawPlayerEvent = (player, rank) => {
+    console.log("drawing from", player, rank);
+    setRankChoice([]);
+    setTurn(turn + 1);
+  };
+
+  const choosePlayerEvent = (thisPlayer) => {
+    const otherPlayers = game.filter((player) => {
+      return player.name !== thisPlayer;
+    });
+    setOtherPlayers(otherPlayers);
+    setRankChoice([]);
+  };
+
+  const chooseRankEvent = (playerName) => {
+    setSelectedPlayer(playerName);
+    setRankChoice(Ranks);
+    setOtherPlayers([]);
+  };
+
+  const drawEvent = (target) => {
+    if (["deck", "player"].includes(target)) {
+      if (target == "deck") {
+        drawDeckEvent();
+        return;
+      }
+      if (target == "player") {
+        choosePlayerEvent(currentPlayer);
+        return;
+      }
+    }
+    console.log("Button click wrong");
+    return;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     localStorage.setItem("userName", userName);
@@ -35,9 +83,49 @@ const PlayerArea = () => {
   };
 
   return (
-    <>
-      <button onClick={drawEvent}>Draw Card</button>
-    </>
+    <div className="play-area-wrapper">
+      <div className="player-turn">{currentPlayer}'s turn</div>
+      <div className="action-container-1">
+        <div className="action-info">
+          <span>Choose action</span>
+        </div>
+        <button className="button-action" onClick={() => drawEvent("deck")}>
+          Draw from Deck
+        </button>
+        <button className="button-action" onClick={() => drawEvent("player")}>
+          Draw from Player
+        </button>
+      </div>
+      <div className="action-container-2">
+        {otherPlayers.length > 0 &&
+          otherPlayers.map((player, index) => {
+            return (
+              <button
+                className="button-action"
+                key={index}
+                onClick={() => chooseRankEvent(player.name)}
+              >
+                Draw from {player.name}
+              </button>
+            );
+          })}
+        {rankChoice.length > 0 && (
+          <div className="button-rank-container">
+            {rankChoice.map((rank, index) => {
+              return (
+                <button
+                  className="button-rank"
+                  key={index}
+                  onClick={() => drawPlayerEvent(selectedPlayer, rank)}
+                >
+                  {rank}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
