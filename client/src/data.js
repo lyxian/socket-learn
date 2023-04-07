@@ -12,3 +12,10 @@ export const Deck = Ranks.flatMap(rank => Suits.map(suit => rank + suit))
 
 const mapper = (val, idx) => ({ [val]: idx })
 export const deckOrder = Object.assign(...Deck.map(mapper))
+
+export const numberToString = {
+    1: 'one',
+    2: 'two',
+    3: 'three',
+    4: 'four',
+}

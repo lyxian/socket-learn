@@ -1,4 +1,4 @@
-import { Deck, deckOrder } from "../data";
+import { Deck, deckOrder, Ranks } from "../data";
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -37,6 +37,25 @@ export function queryHand(hand, rank) {
 export function drawFromDeck(deck) {
   if (deck.length) return deck.splice(0, 1)[0];
   return null;
+}
+
+export function hasCompleteSet(hand) {
+  const countArray = Array(13).fill(0);
+  hand.map((card) => {
+    countArray[Ranks.indexOf(card.slice(0, -1))]++;
+  });
+  const completeSet = countArray
+    .map((count, index) => {
+      // return { count, index };
+      return [count, index];
+    })
+    .filter((count) => {
+      return count[0] === 4;
+    })
+    .map((count) => {
+      return Ranks[count[1]];
+    });
+  return completeSet;
 }
 
 function newGame(deck) {

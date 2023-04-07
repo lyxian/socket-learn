@@ -19,9 +19,11 @@ const PlayerHand = ({ cards, name, score }) => {
   return (
     <div>
       <div className="hand-container">
-        {sortHand(cards).map((card, index) => (
-          <Card key={index} card={card} />
-        ))}
+        {cards.length ? (
+          sortHand(cards).map((card, index) => <Card key={index} card={card} />)
+        ) : (
+          <div className="card-container empty">Empty Hand</div>
+        )}
       </div>
       <PlayerInfo name={name} score={score} />
     </div>

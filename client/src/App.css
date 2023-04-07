@@ -33,6 +33,7 @@
 .info-container {
     display: flex;
     justify-content: space-around;
+    margin: 0px 150px;
 }
 
 .card-container {
@@ -45,6 +46,12 @@
     padding-left: auto;
     padding-right: auto;
     text-align: center;
+}
+.empty {
+    background: #ffd58edf;
+    width: 7rem;
+    font-weight: bold;
+    font-style: italic;
 }
 
 /* .app-header {

@@ -6,29 +6,22 @@ import PlayerHand from "./components/PlayerHand";
 import PlayerArea from "./components/PlayerArea";
 import { newDeck, distributeDeck } from "./hooks/DeckProps";
 
-import { sampleCards, players } from "./data";
+import { Deck, players } from "./data";
 import "./App.css";
 
 const CardContext = createContext();
 const GameContext = createContext();
 
-const deckObj = newDeck;
-const hands = distributeDeck(newDeck, 4);
+const deckObj = newDeck; // Deck; // newDeck;
+const hands = distributeDeck(deckObj, 5);
 
 function App() {
   const [deck, setDeck] = useState(deckObj);
-  console.log(deck, hands);
-
-  // const [cards, setCards] = useState(sampleCards);
+  // console.log(deck, hands);
   const gameObj = players.map((name, index) => {
-    return { name, index, cards: hands[index] };
+    return { name, index, cards: hands[index], score: 0 };
   });
   const [game, setGame] = useState(gameObj);
-
-  // useEffect(() => {
-  //   console.log("update");
-  //   setGame(game);
-  // }, [game]);
 
   return (
     <div className="App">
@@ -41,14 +34,10 @@ function App() {
                 key={index}
                 cards={player.cards}
                 name={player.name}
-                score="0"
+                score={player.score}
               />
             );
           })}
-          {/* <PlayerHand cards={game["you"].cards} name="you" score="0" />
-          <PlayerHand cards={game["bot_1"].cards} name="bot_1" score="0" />
-          <PlayerHand cards={game["bot_2"].cards} name="bot_2" score="0" />
-          <PlayerHand cards={game["bot_3"].cards} name="bot_3" score="0" /> */}
         </div>
         <PlayerArea />
         {/* </CardContext.Provider> */}
