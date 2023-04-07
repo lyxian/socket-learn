@@ -17,7 +17,6 @@ const hands = distributeDeck(deckObj, 5);
 
 function App() {
   const [deck, setDeck] = useState(deckObj);
-  // console.log(deck, hands);
   const gameObj = players.map((name, index) => {
     return { name, index, cards: hands[index], score: 0 };
   });

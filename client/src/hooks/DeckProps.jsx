@@ -58,6 +58,20 @@ export function hasCompleteSet(hand) {
   return completeSet;
 }
 
+export function availableRanks(hand) {
+  const countArray = Array(13).fill(0);
+  hand.map((card) => {
+    countArray[Ranks.indexOf(card.slice(0, -1))]++;
+  });
+  return countArray
+    .map((count, index) => {
+      return [count, index];
+    })
+    .map((count) => {
+      return [Ranks[count[1]], count[0]];
+    });
+}
+
 function newGame(deck) {
   let shuffled = deck
     .map((value) => ({ value, sort: Math.random() }))

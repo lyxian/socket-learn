@@ -1,7 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 // import Card from "./Card";
 // import PlayerInfo from "./PlayerInfo";
-import { drawFromDeck, queryHand, hasCompleteSet } from "../hooks/DeckProps";
+import {
+  drawFromDeck,
+  queryHand,
+  hasCompleteSet,
+  availableRanks,
+} from "../hooks/DeckProps";
 import { CardContext, GameContext } from "../App";
 import { Ranks, numberToString, players } from "../data";
 
@@ -89,7 +94,7 @@ const PlayerArea = () => {
     return continueTurn;
   };
 
-  const drawDeckEvent = (endTurn) => {
+  const drawDeckEvent = () => {
     const card = drawFromDeck(deck);
     if (card) {
       console.log(turn, card);
@@ -186,7 +191,12 @@ const PlayerArea = () => {
 
   const chooseRankEvent = (playerName) => {
     setSelectedPlayer(playerName);
-    setRankChoice(Ranks);
+    const rankChoices = availableRanks(
+      game.find((player) => {
+        return player.name === currentPlayer;
+      }).cards
+    );
+    setRankChoice(rankChoices);
     setOtherPlayers([]);
   };
 
@@ -245,13 +255,17 @@ const PlayerArea = () => {
         {rankChoice.length > 0 && (
           <div className="button-rank-container">
             {rankChoice.map((rank, index) => {
-              return (
+              return rank[1] ? (
                 <button
                   className="button-rank"
                   key={index}
-                  onClick={() => drawPlayerEvent(rank)}
+                  onClick={() => drawPlayerEvent(rank[0])}
                 >
-                  {rank}
+                  {rank[0]}
+                </button>
+              ) : (
+                <button className="button-rank invalid" key={index}>
+                  {rank[0]}
                 </button>
               );
             })}

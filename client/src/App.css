@@ -185,3 +185,11 @@ button:hover {
     color: #fff;
     cursor: pointer;
 }
+.invalid {
+    background: #6f6f6f;
+    cursor: auto;
+}
+.invalid:hover {
+    background-color: #6f6f6f;
+    color: white;
+}
