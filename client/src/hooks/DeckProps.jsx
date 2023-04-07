@@ -1,4 +1,4 @@
-import { Deck, deckOrder, Ranks } from "../data";
+import { Deck, deckOrder, Ranks, players } from "../data";
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -10,7 +10,7 @@ function shuffle(array) {
 export function distributeDeck(deck, handSize) {
   console.log("distribute deck");
   var hand = [];
-  for (let i = 0; i < handSize * 4; i += handSize) {
+  for (let i = 0; i < handSize * players.length; i += handSize) {
     hand.push(deck.splice(0, handSize));
   }
   return hand;

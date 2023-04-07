@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 // import PlayerInfo from "./PlayerInfo";
 import { drawFromDeck, queryHand, hasCompleteSet } from "../hooks/DeckProps";
 import { CardContext, GameContext } from "../App";
-import { Ranks, numberToString } from "../data";
+import { Ranks, numberToString, players } from "../data";
 
 const botDelay = 1000; // = 1s
 
@@ -16,11 +16,14 @@ const PlayerArea = () => {
   const [rankChoice, setRankChoice] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState();
   const [turnMessage, setTurnMessage] = useState("");
+  const [gameMessage, setGameMessage] = useState("");
   const [moveHistory, setMoveHistory] = useState([]);
+  const [gameInProgress, setGameInProgress] = useState(true);
+  const [canDrawDeck, setCanDrawDeck] = useState(false);
 
   useEffect(() => {
     const nextPlayer = game.find((player) => {
-      return player.index === turn % 4;
+      return player.index === turn % players.length;
     }).name;
     setCurrentPlayer(nextPlayer);
     // if (nextPlayer.includes("bot")) {
@@ -31,7 +34,32 @@ const PlayerArea = () => {
     // }
   }, [turn]);
 
+  const checkGameEnd = () => {
+    const gameEnded =
+      game.every((player) => {
+        return player.cards.length === 0;
+      }) && deck.length === 0;
+    if (gameEnded) {
+      const highScore = game
+        .map((player) => {
+          return player.score;
+        })
+        .sort()
+        .pop();
+      const winner = game
+        .filter((player) => {
+          return player.score === highScore;
+        })
+        .map((player) => {
+          return player.name;
+        });
+      setGameMessage(`Winner: ${winner.join(", ")}`);
+      setGameInProgress(false);
+    }
+  };
+
   const checkCompletedSets = () => {
+    let continueTurn = true;
     const completeSets = hasCompleteSet(
       game.find((player) => {
         return player.name === currentPlayer;
@@ -50,6 +78,7 @@ const PlayerArea = () => {
               });
             });
             player.score += completeSets.length;
+            if (!player.cards.length) continueTurn = false;
             return player;
           } else {
             return player;
@@ -57,6 +86,7 @@ const PlayerArea = () => {
         }),
       ]);
     }
+    return continueTurn;
   };
 
   const drawDeckEvent = (endTurn) => {
@@ -72,32 +102,40 @@ const PlayerArea = () => {
           return player;
         })
       );
-      if (endTurn) {
-        setRankChoice([]);
-        setOtherPlayers([]);
-        checkCompletedSets();
-        setTurn(turn + 1);
-      }
+      setRankChoice([]);
+      setOtherPlayers([]);
+      checkCompletedSets();
+      setTurn(turn + 1);
     } else {
       console.log("Deck has no more cards.");
+      setTurn(turn + 1);
     }
   };
 
   const drawPlayerEvent = (rank) => {
-    console.log("drawing from", selectedPlayer, rank);
-    const queryResult = queryHand(
-      game.find((player) => {
-        return player.name === selectedPlayer;
-      }).cards,
-      rank
-    );
+    const target = rank ?? "deck";
+    if (target == "deck") {
+      console.log("drawing from deck");
+      setCanDrawDeck(false);
+    } else {
+      console.log("drawing from", selectedPlayer, rank);
+    }
+    const queryResult = canDrawDeck
+      ? []
+      : queryHand(
+          game.find((player) => {
+            return player.name === selectedPlayer;
+          }).cards,
+          rank
+        );
     if (queryResult.length) {
       setGame([
         ...game.map((player) => {
           if (player.name == selectedPlayer) {
             player.cards = player.cards.filter((card) => {
-              return !queryResult.includes(card);
+              return !card.includes(rank);
             });
+            console.log(player);
             return player;
           } else if (player.name == currentPlayer) {
             player.cards.push(...queryResult);
@@ -107,27 +145,43 @@ const PlayerArea = () => {
           }
         }),
       ]);
-      setTurnMessage(
-        `${currentPlayer} drew ${
-          numberToString[queryResult.length]
-        } ${rank}'s from ${selectedPlayer}`
-      );
+      const message = `${currentPlayer} drew ${
+        numberToString[queryResult.length]
+      } ${rank}'s from ${selectedPlayer}`;
+      setTurnMessage(message);
+      setRankChoice([]);
+      const continueTurn = checkCompletedSets();
+      if (!continueTurn) {
+        if (deck.length !== 0) {
+          setTurnMessage(`${message}, drew from deck`);
+        }
+        drawDeckEvent();
+      }
       // setMoveHistory([...moveHistory, []]);
     } else {
-      drawDeckEvent();
       setTurnMessage(`${currentPlayer} drew from deck`);
+      drawDeckEvent();
     }
-    setRankChoice([]);
-    checkCompletedSets();
-    setTurn(turn + 1);
+    checkGameEnd();
   };
 
   const choosePlayerEvent = (thisPlayer) => {
     const otherPlayers = game.filter((player) => {
       return player.name !== thisPlayer;
     });
-    setOtherPlayers(otherPlayers);
-    setRankChoice([]);
+    const drawFromDeck =
+      otherPlayers.every((player) => {
+        return player.cards.length === 0;
+      }) ||
+      game.find((player) => {
+        return player.name === thisPlayer;
+      }).cards.length === 0;
+    if (drawFromDeck) {
+      setCanDrawDeck(true);
+    } else {
+      setOtherPlayers(otherPlayers);
+      setRankChoice([]);
+    }
   };
 
   const chooseRankEvent = (playerName) => {
@@ -139,8 +193,7 @@ const PlayerArea = () => {
   const drawEvent = (target) => {
     if (["deck", "player"].includes(target)) {
       if (target == "deck") {
-        drawDeckEvent(true);
-        setTurnMessage(`${currentPlayer} drew from deck`);
+        drawPlayerEvent();
         return;
       }
       if (target == "player") {
@@ -165,12 +218,11 @@ const PlayerArea = () => {
         <div className="action-info">
           <span>Choose action</span>
         </div>
-        <button className="button-action" onClick={() => drawEvent("deck")}>
-          Draw from Deck
-        </button>
-        <button className="button-action" onClick={() => drawEvent("player")}>
-          Draw from Player
-        </button>
+        {gameInProgress && (
+          <button className="button-action" onClick={() => drawEvent("player")}>
+            Draw from Player
+          </button>
+        )}
       </div>
       <div className="action-container-2">
         {otherPlayers.length > 0 &&
@@ -185,6 +237,11 @@ const PlayerArea = () => {
               </button>
             );
           })}
+        {canDrawDeck && (
+          <button className="button-action" onClick={() => drawEvent("deck")}>
+            Draw from Deck
+          </button>
+        )}
         {rankChoice.length > 0 && (
           <div className="button-rank-container">
             {rankChoice.map((rank, index) => {
@@ -204,6 +261,11 @@ const PlayerArea = () => {
       {turnMessage && (
         <div className="message-container">
           <div>{turnMessage}</div>
+        </div>
+      )}
+      {!gameInProgress && (
+        <div className="message-container winner">
+          <div>{gameMessage}</div>
         </div>
       )}
     </div>
