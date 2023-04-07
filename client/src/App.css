@@ -114,7 +114,7 @@
     align-items: center;
     align-content: center;
     justify-content: space-evenly;
-    height: 60%;
+    height: 50%;
 }
 .button-rank-container {
     display: flex;
@@ -130,11 +130,20 @@
     /* grid-template-rows: 100px 200px 100px; */
     /* grid-template-areas: "head head2 . side" "main main2 . side" "footer footer footer footer"; */
 }
-
+.message-container {
+    display: flex;
+    background: #0ce3ac;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+    width: 100%;
+    height: 10%;}
 
 button {
     /* background: none; */
-    /* background: #0ce3ac; */
     background: #337ab7;
     /* background: #375a7f; */
 }

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 // import Card from "./Card";
 // import PlayerInfo from "./PlayerInfo";
-import { drawFromDeck } from "../hooks/DeckProps";
+import { drawFromDeck, queryHand } from "../hooks/DeckProps";
 import { CardContext, GameContext } from "../App";
 import { Ranks } from "../data";
 
@@ -13,6 +13,7 @@ const PlayerArea = () => {
   const [otherPlayers, setOtherPlayers] = useState([]);
   const [rankChoice, setRankChoice] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState();
+  const [turnMessage, setTurnMessage] = useState("");
 
   useEffect(() => {
     setCurrentPlayer(
@@ -22,8 +23,8 @@ const PlayerArea = () => {
     );
   }, [turn]);
 
-  const drawDeckEvent = (e) => {
-    let card = drawFromDeck(deck);
+  const drawDeckEvent = () => {
+    const card = drawFromDeck(deck);
     if (card) {
       console.log(turn, card);
       // alert(`You drawn ${card}`);
@@ -41,8 +42,35 @@ const PlayerArea = () => {
     }
   };
 
-  const drawPlayerEvent = (player, rank) => {
-    console.log("drawing from", player, rank);
+  const drawPlayerEvent = (rank) => {
+    console.log("drawing from", selectedPlayer, rank);
+    const queryResult = queryHand(
+      game.find((player) => {
+        return player.name === selectedPlayer;
+      }).cards,
+      rank
+    );
+    if (queryResult.length) {
+      setGame([
+        ...game.map((player) => {
+          if (player.name == selectedPlayer) {
+            player.cards = player.cards.filter((card) => {
+              return !queryResult.includes(card);
+            });
+            return player;
+          } else if (player.name == currentPlayer) {
+            player.cards.push(...queryResult);
+            return player;
+          } else {
+            return player;
+          }
+        }),
+      ]);
+      setTurnMessage(`${currentPlayer} drew from ${selectedPlayer}`);
+    } else {
+      drawDeckEvent();
+      setTurnMessage(`${currentPlayer} drew from deck`);
+    }
     setRankChoice([]);
     setTurn(turn + 1);
   };
@@ -65,6 +93,7 @@ const PlayerArea = () => {
     if (["deck", "player"].includes(target)) {
       if (target == "deck") {
         drawDeckEvent();
+        setTurnMessage(`${currentPlayer} drew from deck`);
         return;
       }
       if (target == "player") {
@@ -116,7 +145,7 @@ const PlayerArea = () => {
                 <button
                   className="button-rank"
                   key={index}
-                  onClick={() => drawPlayerEvent(selectedPlayer, rank)}
+                  onClick={() => drawPlayerEvent(rank)}
                 >
                   {rank}
                 </button>
@@ -124,6 +153,9 @@ const PlayerArea = () => {
             })}
           </div>
         )}
+      </div>
+      <div className="message-container">
+        {turnMessage && <div>{turnMessage}</div>}
       </div>
     </div>
   );

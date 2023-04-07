@@ -28,6 +28,12 @@ function randomCardFromHand(hand) {
   return hand[Math.floor(Math.random() * hand.length)];
 }
 
+export function queryHand(hand, rank) {
+  return hand.filter((card) => {
+    return card.includes(rank);
+  });
+}
+
 export function drawFromDeck(deck) {
   if (deck.length) return deck.splice(0, 1)[0];
   return null;
