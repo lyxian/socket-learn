@@ -55,7 +55,7 @@ const PlayerArea = () => {
           setBotChoice(randomRank);
           const randomPlayer = randomFromArray(
             game.filter((player) => {
-              return player.name !== nextPlayer.name;
+              return player.name !== nextPlayer.name && player.cards.length;
             })
           );
           setSelectedPlayer(randomPlayer.name);
@@ -68,7 +68,7 @@ const PlayerArea = () => {
   }, [currentPlayer]);
 
   useEffect(() => {
-    if (currentPlayer.includes("bot") && selectedPlayer) {
+    if (gameInProgress && currentPlayer.includes("bot") && selectedPlayer) {
       // console.log(currentPlayer, selectedPlayer, botChoice);
       drawPlayerEvent(botChoice);
     }
@@ -76,7 +76,7 @@ const PlayerArea = () => {
 
   useEffect(() => {
     if (currentPlayer.includes("bot")) {
-      if (!turnMessage.includes("deck")) {
+      if (turnMessage && !turnMessage.includes("deck")) {
         console.log(currentPlayer, "taking turn again");
         const nextPlayer = game.find((player) => {
           return player.index === turn % players.length;
@@ -89,7 +89,7 @@ const PlayerArea = () => {
             setBotChoice(randomRank);
             const randomPlayer = randomFromArray(
               game.filter((player) => {
-                return player.name !== nextPlayer.name;
+                return player.name !== nextPlayer.name && player.cards.length;
               })
             );
             setSelectedPlayer(randomPlayer.name);
@@ -124,9 +124,12 @@ const PlayerArea = () => {
         .map((player) => {
           return player.name;
         });
+      console.log(`Winner: ${winner.join(", ")}`);
       setGameMessage(`Winner: ${winner.join(", ")}`);
       setGameInProgress(false);
+      return true;
     }
+    return false;
   };
 
   const checkCompletedSets = (message) => {
@@ -163,8 +166,13 @@ const PlayerArea = () => {
           }
         }),
       ]);
+      return continueTurn;
+    } else {
+      if (checkGameEnd()) {
+        return false;
+      }
+      return true;
     }
-    return continueTurn;
   };
 
   const drawDeckEvent = () => {
@@ -180,14 +188,16 @@ const PlayerArea = () => {
           return player;
         })
       );
-      setRankChoice([]);
-      setOtherPlayers([]);
       checkCompletedSets();
-      setTurn(turn + 1);
+      const continueGame = checkCompletedSets();
+      continueGame && setTurn(turn + 1);
     } else {
       console.log("Deck has no more cards.");
-      setTurn(turn + 1);
+      const continueGame = checkCompletedSets();
+      continueGame && setTurn(turn + 1);
     }
+    setRankChoice([]);
+    setOtherPlayers([]);
   };
 
   const drawPlayerEvent = (rank) => {
@@ -244,7 +254,6 @@ const PlayerArea = () => {
       setTurnMessage(`${currentPlayer} drew from deck`);
       drawDeckEvent();
     }
-    checkGameEnd();
     setSelectedPlayer("");
   };
 

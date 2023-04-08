@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Card = ({ card, owner }) => {
   const symbol = card.slice(-1);
-  const cardObj = owner.includes("bott") ? (
+  const cardObj = owner.includes("bot") ? (
     <span style={{ display: "none" }}>{card}</span>
   ) : ["♥", "♦"].includes(symbol) ? (
     <span style={{ color: "red" }}>{card}</span>
