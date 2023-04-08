@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 
-const Card = ({ card }) => {
+const Card = ({ card, owner }) => {
   const symbol = card.slice(-1);
-  const cardObj = ["♥", "♦"].includes(symbol) ? (
+  const cardObj = owner.includes("bott") ? (
+    <span style={{ display: "none" }}>{card}</span>
+  ) : ["♥", "♦"].includes(symbol) ? (
     <span style={{ color: "red" }}>{card}</span>
   ) : (
     <span>{card}</span>

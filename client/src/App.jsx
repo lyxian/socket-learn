@@ -41,20 +41,26 @@ function App() {
           setMoveHistory,
         }}
       >
-        <div className="hand-area-wrapper">
-          {game.map((player, index) => {
-            return (
-              <PlayerHand
-                key={index}
-                cards={player.cards}
-                name={player.name}
-                score={player.score}
-                myTurn={turn % players.length === index}
-              />
-            );
-          })}
+        <div className="left-area-wrapper">
+          <div className="hand-area-wrapper">
+            {game.map((player, index) => {
+              return (
+                <PlayerHand
+                  key={index}
+                  cards={player.cards}
+                  name={player.name}
+                  score={player.score}
+                  myTurn={turn % players.length === index}
+                />
+              );
+            })}
+          </div>
           <div className="move-history-area">
-            <span>Move History</span>
+            <div className="useful-info">
+              <span>Move History</span>
+              {/* <span>Deck Count: {deck.length}</span> */}
+              <span>Cards Left: {deck.length}</span>
+            </div>
             <div className="move-history-wrapper">
               {moveHistory.length ? (
                 moveHistory.map((move, index) => {
