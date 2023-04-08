@@ -14,6 +14,7 @@ const GameContext = createContext();
 
 const deckObj = newDeck; // Deck; // newDeck;
 const hands = distributeDeck(deckObj, 5);
+// console.log(deckObj);
 
 function App() {
   const [deck, setDeck] = useState(deckObj);
@@ -21,11 +22,14 @@ function App() {
     return { name, index, cards: hands[index], score: 0 };
   });
   const [game, setGame] = useState(gameObj);
+  const [turn, setTurn] = useState(0);
 
   return (
     <div className="App">
       {/* <CardContext.Provider value={{ cards, setCards }}> */}
-      <GameContext.Provider value={{ game, setGame, deck, setDeck }}>
+      <GameContext.Provider
+        value={{ game, setGame, deck, setDeck, turn, setTurn }}
+      >
         <div className="hand-area-wrapper">
           {game.map((player, index) => {
             return (
@@ -34,6 +38,7 @@ function App() {
                 cards={player.cards}
                 name={player.name}
                 score={player.score}
+                myTurn={turn % players.length === index}
               />
             );
           })}

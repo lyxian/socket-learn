@@ -7,15 +7,16 @@ import {
   hasCompleteSet,
   availableRanks,
 } from "../hooks/DeckProps";
+import { randomAvailableRank, randomFromArray } from "../hooks/BotLogic";
 import { CardContext, GameContext } from "../App";
 import { Ranks, numberToString, players } from "../data";
 
-const botDelay = 1000; // = 1s
+const botDelay = 2000; // = 1s
 
 const PlayerArea = () => {
   // const { cards, setCards } = useContext(CardContext);
-  const { game, setGame, deck } = useContext(GameContext);
-  const [turn, setTurn] = useState(0);
+  const { game, setGame, deck, turn, setTurn } = useContext(GameContext);
+  // const [turn, setTurn] = useState(0);
   const [currentPlayer, setCurrentPlayer] = useState(game[0].name);
   const [otherPlayers, setOtherPlayers] = useState([]);
   const [rankChoice, setRankChoice] = useState([]);
@@ -25,19 +26,83 @@ const PlayerArea = () => {
   const [moveHistory, setMoveHistory] = useState([]);
   const [gameInProgress, setGameInProgress] = useState(true);
   const [canDrawDeck, setCanDrawDeck] = useState(false);
+  const [botChoice, setBotChoice] = useState("");
 
   useEffect(() => {
-    const nextPlayer = game.find((player) => {
-      return player.index === turn % players.length;
-    }).name;
-    setCurrentPlayer(nextPlayer);
-    // if (nextPlayer.includes("bot")) {
-    //   setTimeout(() => {
-    //     drawDeckEvent(true);
-    //     setTurn(turn + 1);
-    //   }, botDelay);
-    // }
+    checkCompletedSets();
+  }, []);
+
+  useEffect(() => {
+    if (gameInProgress) {
+      const nextPlayer = game.find((player) => {
+        return player.index === turn % players.length;
+      });
+      setCurrentPlayer(nextPlayer.name);
+    }
   }, [turn]);
+
+  useEffect(() => {
+    if (currentPlayer.includes("bot")) {
+      const nextPlayer = game.find((player) => {
+        return player.index === turn % players.length;
+      });
+      setTimeout(() => {
+        if (nextPlayer.cards.length) {
+          const randomRank = randomAvailableRank(
+            availableRanks(nextPlayer.cards)
+          );
+          setBotChoice(randomRank);
+          const randomPlayer = randomFromArray(
+            game.filter((player) => {
+              return player.name !== nextPlayer.name;
+            })
+          );
+          setSelectedPlayer(randomPlayer.name);
+        } else {
+          drawDeckEvent();
+        }
+        // setTurn(turn + 1);
+      }, botDelay);
+    }
+  }, [currentPlayer]);
+
+  useEffect(() => {
+    if (currentPlayer.includes("bot") && selectedPlayer) {
+      // console.log(currentPlayer, selectedPlayer, botChoice);
+      drawPlayerEvent(botChoice);
+    }
+  }, [selectedPlayer]);
+
+  useEffect(() => {
+    if (currentPlayer.includes("bot")) {
+      if (!turnMessage.includes("deck")) {
+        console.log(currentPlayer, "taking turn again");
+        const nextPlayer = game.find((player) => {
+          return player.index === turn % players.length;
+        });
+        setTimeout(() => {
+          if (nextPlayer.cards.length) {
+            const randomRank = randomAvailableRank(
+              availableRanks(nextPlayer.cards)
+            );
+            setBotChoice(randomRank);
+            const randomPlayer = randomFromArray(
+              game.filter((player) => {
+                return player.name !== nextPlayer.name;
+              })
+            );
+            setSelectedPlayer(randomPlayer.name);
+          } else {
+            drawDeckEvent();
+          }
+          // setTurn(turn + 1);
+        }, botDelay);
+      }
+    }
+    // else {
+    //   console.log("useEffect", turnMessage);
+    // }
+  }, [turnMessage]);
 
   const checkGameEnd = () => {
     const gameEnded =
@@ -63,7 +128,7 @@ const PlayerArea = () => {
     }
   };
 
-  const checkCompletedSets = () => {
+  const checkCompletedSets = (message) => {
     let continueTurn = true;
     const completeSets = hasCompleteSet(
       game.find((player) => {
@@ -71,6 +136,13 @@ const PlayerArea = () => {
       }).cards
     );
     if (completeSets.length) {
+      // const newMessage =
+      //   turn == 0
+      //     ? `${currentPlayer} completed sets of ${completeSets.join(", ")}`
+      //     : message
+      //     ? `${message}, completed sets of ${completeSets.join(", ")}`
+      //     : `${currentPlayer} drew from deck`;
+      // setTurnMessage(`${newMessage}`);
       console.log(
         `${currentPlayer} completed sets of ${completeSets.join(", ")}`
       );
@@ -101,7 +173,7 @@ const PlayerArea = () => {
       // alert(`You drawn ${card}`);
       setGame(
         game.map((player) => {
-          if (player.index === turn % 4) {
+          if (player.index === turn % players.length) {
             player.cards = [...player.cards, card];
           }
           return player;
@@ -140,7 +212,6 @@ const PlayerArea = () => {
             player.cards = player.cards.filter((card) => {
               return !card.includes(rank);
             });
-            console.log(player);
             return player;
           } else if (player.name == currentPlayer) {
             player.cards.push(...queryResult);
@@ -155,7 +226,7 @@ const PlayerArea = () => {
       } ${rank}'s from ${selectedPlayer}`;
       setTurnMessage(message);
       setRankChoice([]);
-      const continueTurn = checkCompletedSets();
+      const continueTurn = checkCompletedSets(message);
       if (!continueTurn) {
         if (deck.length !== 0) {
           setTurnMessage(`${message}, drew from deck`);
@@ -168,6 +239,7 @@ const PlayerArea = () => {
       drawDeckEvent();
     }
     checkGameEnd();
+    setSelectedPlayer("");
   };
 
   const choosePlayerEvent = (thisPlayer) => {
@@ -220,7 +292,6 @@ const PlayerArea = () => {
     localStorage.setItem("userName", userName);
     navigate("/products");
   };
-
   return (
     <div className="play-area-wrapper">
       <div className="player-turn">{currentPlayer}'s turn</div>
@@ -230,7 +301,7 @@ const PlayerArea = () => {
         </div>
         {gameInProgress && (
           <button className="button-action" onClick={() => drawEvent("player")}>
-            Draw from Player
+            Draw
           </button>
         )}
       </div>

@@ -29,6 +29,10 @@
     flex-direction: row;
     justify-content: space-around;
 }
+.current {
+    background-color: #98ffa0;
+    padding: 30px 0;
+}
 
 .info-container {
     display: flex;
@@ -174,6 +178,10 @@ button:hover {
     color: #fff;
     cursor: pointer;
 }
+/* .button-action-deck {
+    padding: 1rem;
+    font-size: 1.5rem;
+} */
 .button-rank {
     flex: 0 0 calc(20% - 10px);
     border: 2px solid #fff;

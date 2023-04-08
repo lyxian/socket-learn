@@ -3,7 +3,7 @@ import Card from "./Card";
 import PlayerInfo from "./PlayerInfo";
 import { sortHand } from "../hooks/DeckProps";
 
-const PlayerHand = ({ cards, name, score }) => {
+const PlayerHand = ({ cards, name, score, myTurn }) => {
   // const [playerCards, setPlayerCards] = useState(cards);
 
   // useEffect(() => {
@@ -16,8 +16,9 @@ const PlayerHand = ({ cards, name, score }) => {
     navigate("/products");
   };
 
+  const divClassName = myTurn ? "current" : "";
   return (
-    <div>
+    <div className={divClassName}>
       <div className="hand-container">
         {cards.length ? (
           sortHand(cards).map((card, index) => <Card key={index} card={card} />)
