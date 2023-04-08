@@ -16,7 +16,7 @@ const PlayerHand = ({ cards, name, score, myTurn }) => {
     navigate("/products");
   };
 
-  const divClassName = myTurn ? "current" : "";
+  const divClassName = myTurn ? "current" : "others";
   return (
     <div className={divClassName}>
       <div className="hand-container">

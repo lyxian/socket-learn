@@ -15,7 +15,8 @@ const botDelay = 2000; // = 1s
 
 const PlayerArea = () => {
   // const { cards, setCards } = useContext(CardContext);
-  const { game, setGame, deck, turn, setTurn } = useContext(GameContext);
+  const { game, setGame, deck, turn, setTurn, moveHistory, setMoveHistory } =
+    useContext(GameContext);
   // const [turn, setTurn] = useState(0);
   const [currentPlayer, setCurrentPlayer] = useState(game[0].name);
   const [otherPlayers, setOtherPlayers] = useState([]);
@@ -23,10 +24,10 @@ const PlayerArea = () => {
   const [selectedPlayer, setSelectedPlayer] = useState();
   const [turnMessage, setTurnMessage] = useState("");
   const [gameMessage, setGameMessage] = useState("");
-  const [moveHistory, setMoveHistory] = useState([]);
   const [gameInProgress, setGameInProgress] = useState(true);
   const [canDrawDeck, setCanDrawDeck] = useState(false);
   const [botChoice, setBotChoice] = useState("");
+  const [selectedAction, setSelectedAction] = useState();
 
   useEffect(() => {
     checkCompletedSets();
@@ -195,6 +196,9 @@ const PlayerArea = () => {
       console.log("drawing from deck");
       setCanDrawDeck(false);
     } else {
+      const message = `${currentPlayer} tried drawing ${rank} from ${selectedPlayer}`;
+      setSelectedAction(message);
+      setMoveHistory([message, ...moveHistory]);
       console.log("drawing from", selectedPlayer, rank);
     }
     const queryResult = canDrawDeck
@@ -225,6 +229,8 @@ const PlayerArea = () => {
         numberToString[queryResult.length]
       } ${rank}'s from ${selectedPlayer}`;
       setTurnMessage(message);
+      setSelectedAction(message);
+      setMoveHistory([message, ...moveHistory]);
       setRankChoice([]);
       const continueTurn = checkCompletedSets(message);
       if (!continueTurn) {
@@ -274,6 +280,8 @@ const PlayerArea = () => {
 
   const drawEvent = (target) => {
     if (["deck", "player"].includes(target)) {
+      setSelectedPlayer("");
+      setSelectedAction("");
       if (target == "deck") {
         drawPlayerEvent();
         return;
@@ -292,6 +300,8 @@ const PlayerArea = () => {
     localStorage.setItem("userName", userName);
     navigate("/products");
   };
+
+  const playerMove = currentPlayer.includes("bot") ? false : true;
   return (
     <div className="play-area-wrapper">
       <div className="player-turn">{currentPlayer}'s turn</div>
@@ -299,11 +309,20 @@ const PlayerArea = () => {
         <div className="action-info">
           <span>Choose action</span>
         </div>
-        {gameInProgress && (
+        {gameInProgress && playerMove ? (
           <button className="button-action" onClick={() => drawEvent("player")}>
             Draw
           </button>
+        ) : (
+          <button className="button-action invalid">Draw</button>
         )}
+        <span className="action-show">
+          {selectedPlayer
+            ? `Drawing from ${selectedPlayer}`
+            : selectedAction
+            ? selectedAction
+            : ""}
+        </span>
       </div>
       <div className="action-container-2">
         {otherPlayers.length > 0 &&

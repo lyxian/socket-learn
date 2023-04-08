@@ -4,6 +4,7 @@ import React, { useEffect, useState, createContext } from "react";
 // import MessageInput from "./MessageInput";
 import PlayerHand from "./components/PlayerHand";
 import PlayerArea from "./components/PlayerArea";
+import MoveHistory from "./components/MoveHistory";
 import { newDeck, distributeDeck } from "./hooks/DeckProps";
 
 import { Deck, players } from "./data";
@@ -23,12 +24,22 @@ function App() {
   });
   const [game, setGame] = useState(gameObj);
   const [turn, setTurn] = useState(0);
+  const [moveHistory, setMoveHistory] = useState([]);
 
   return (
     <div className="App">
       {/* <CardContext.Provider value={{ cards, setCards }}> */}
       <GameContext.Provider
-        value={{ game, setGame, deck, setDeck, turn, setTurn }}
+        value={{
+          game,
+          setGame,
+          deck,
+          setDeck,
+          turn,
+          setTurn,
+          moveHistory,
+          setMoveHistory,
+        }}
       >
         <div className="hand-area-wrapper">
           {game.map((player, index) => {
@@ -42,6 +53,18 @@ function App() {
               />
             );
           })}
+          <div className="move-history-area">
+            <span>Move History</span>
+            <div className="move-history-wrapper">
+              {moveHistory.length ? (
+                moveHistory.map((move, index) => {
+                  return <MoveHistory key={index} move={move} />;
+                })
+              ) : (
+                <div className="move-history-container">No moves yet</div>
+              )}
+            </div>
+          </div>
         </div>
         <PlayerArea />
         {/* </CardContext.Provider> */}
