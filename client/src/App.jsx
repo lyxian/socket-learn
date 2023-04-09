@@ -58,9 +58,10 @@ function App() {
           <div className="move-history-area">
             <div className="useful-info">
               <span>Move History</span>
-              {/* <span>Deck Count: {deck.length}</span> */}
+              <hr className="horizontal-line" />
               <span>Cards Left: {deck.length}</span>
             </div>
+            <hr className="vertical-line" />
             <div className="move-history-wrapper">
               {moveHistory.length ? (
                 moveHistory.map((move, index) => {

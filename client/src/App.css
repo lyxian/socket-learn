@@ -64,9 +64,7 @@
     flex-grow: 1;
     overflow-y: scroll;
     flex-direction: column;
-    /* justify-content: flex-end; */
     margin-top: 10px;
-    /* min-height: calc(100% - 10px); */
     height: calc(100% - 10px);
 }
 .move-history-container {
@@ -82,6 +80,15 @@
     padding-right: 10px;
     height: calc(100% - 20px);
     width: 20%;
+}
+hr.horizontal-line {
+    background: black;
+    height: 2px;
+}
+hr.vertical-line {
+    background: black;
+    min-height: 100%;
+    width: 2.5px;
 }
 
 .info-container {
