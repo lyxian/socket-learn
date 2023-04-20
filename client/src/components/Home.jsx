@@ -1,32 +1,39 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Lobby from "./Lobby";
 
 const Home = () => {
-  const [userName, setUserName] = useState("");
+  const [hasUsername, setHasUsername] = useState(false);
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
+    setHasUsername(true);
     e.preventDefault();
-    localStorage.setItem("userName", userName);
-    navigate("/products");
+    // localStorage.setItem("username", username);
+    // navigate("/products");
   };
 
   return (
-    <div>
-      <form className="home__form" onSubmit={handleSubmit}>
-        <label htmlFor="username">Enter your username</label>
-        <input
-          type="text"
-          name="username"
-          className="home__input"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          required
-          minLength={1}
-        />
-        <button className="home__cta">SIGN IN</button>
-      </form>
-    </div>
+    <>
+      {hasUsername ? (
+        <Lobby user={username} setHasUsername={setHasUsername} />
+      ) : (
+        <form className="landing-page-wrapper" onSubmit={handleSubmit}>
+          <label htmlFor="username">Enter username</label>
+          <input
+            type="text"
+            name="username"
+            className="input-text-container"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            minLength={1}
+          />
+          <button className="lobby-button">SIGN IN</button>
+        </form>
+      )}
+    </>
   );
 };
 
