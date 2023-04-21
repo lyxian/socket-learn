@@ -172,6 +172,10 @@ button {
   align-items: center;
   margin-bottom: 40px;
 }
+.action-container-ex {
+  justify-content: flex-end;
+  margin-bottom: 0px;
+}
 .action-button {
   width: 110px;
   margin: 0px;

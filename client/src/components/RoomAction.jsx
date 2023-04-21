@@ -117,7 +117,7 @@ const RoomAction = ({ user }) => {
         </>
       ) : (
         <>
-          <div className="room-action-container">
+          <div className="room-action-container action-container-ex">
             <button
               className="action-button top-button"
               onClick={(e) => handleReadyPlayer(true)}
