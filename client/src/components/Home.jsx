@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Lobby from "./Lobby";
+import { UserContext } from "../App";
 
 const Home = () => {
+  const { username, setUsername } = useContext(UserContext);
+  // const [username, setUsername] = useState("");
   const [hasUsername, setHasUsername] = useState(false);
-  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {

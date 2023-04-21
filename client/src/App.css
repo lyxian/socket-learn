@@ -5,132 +5,13 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+  /* min-height: 0; */
 }
-
-/* --------Stylesheet for the Navigation component ------*/
-.navbar {
-  width: 100%;
-  height: 10vh;
-  background-color: #f0ebe3;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  margin-bottom: 30px;
+body {
+  background: #9be1ef;
 }
-.navbar .header {
-  width: 70%;
-}
-
-/* --------Stylesheet for the Home component ------*/
-.home__form {
-  width: 100%;
-  height: 80vh;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-.home__input,
-.addProduct__form input,
-.bidProduct__form input {
-  width: 70%;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 15px 0;
-  outline: none;
-  border: 1px solid #576f72;
-}
-.home__cta {
-  width: 200px;
-  padding: 10px;
-  font-size: 16px;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-  background-color: rgb(67, 143, 67);
-}
-
-/* --------Stylesheet for the Products component ------*/
-.editIcon {
-  height: 20px;
-  cursor: pointer;
-}
-table {
-  width: 95%;
-  border: 1px solid #576f72;
-  margin: 0 auto;
-  border-collapse: collapse;
-}
-tr,
-td,
-th {
-  border: 1px solid #576f72;
-  text-align: center;
-  padding: 5px;
-}
-.table__container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-.products__cta {
-  width: 70%;
-  background-color: rgb(67, 143, 67);
-  padding: 15px;
-  color: #fff;
-  margin-bottom: 35px;
-  border-radius: 5px;
-  text-decoration: none;
-  text-align: center;
-}
-
-/* --------Stylesheet for the AddProducts & BidProducts component ------*/
-.addproduct__container,
-.bidproduct__container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.addproduct__container h2,
-.bidproduct__container h2 {
-  margin-bottom: 30px;
-}
-.addProduct__form,
-.bidProduct__form {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  margin: 0 auto;
-}
-.addProduct__cta,
-.bidProduct__cta {
-  width: 200px;
-  padding: 10px;
-  font-size: 16px;
-  outline: none;
-  border: none;
-  color: #fff;
-  background-color: rgb(67, 143, 67);
-  cursor: pointer;
-}
-.bidProduct__name {
-  margin-bottom: 20px;
-}
-
 button {
   margin: 0 5px 0 5px;
-}
-
-.header-logout {
-  width: 5%;
-}
-
-.header-logout > button {
-  margin: 0;
 }
 
 /* ================= */
@@ -146,7 +27,6 @@ button {
   justify-content: center;
   align-items: center;
 }
-
 .lobby-action-wrapper-row {
   width: 100%;
   height: 80vh;
@@ -157,17 +37,6 @@ button {
   justify-content: center;
   align-items: center;
 }
-
-.input-text-container {
-  width: 15%;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 15px 0;
-  outline: none;
-  border: 1px solid #576f72;
-  text-align: center;
-}
-
 .lobby-button {
   width: 150px;
   padding: 10px;
@@ -178,6 +47,15 @@ button {
   color: #fff;
   background-color: rgb(67, 143, 67);
 }
+.input-text-container {
+  width: 15%;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 15px 0;
+  outline: none;
+  border: 1px solid #576f72;
+  text-align: center;
+}
 
 .username-wrapper {
   display: flex;
@@ -185,13 +63,103 @@ button {
   justify-content: center;
   align-items: center;
 }
-
 .username-container {
   text-align: center;
   padding-bottom: 10px;
 }
-
 .username-container > span {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.room-wrapper {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+.room-info-container {
+  display: flex;
+  padding: 20px;
+}
+.room-players-container {
+  width: 55%;
+  padding: 40px 0px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.player-container {
+  /* height: 15vh; */
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.player-status-ready,
+.player-status-empty,
+.player-status-joined {
+  /* border: 2px solid #fff; */
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  color: #fff;
+  text-align: center;
+}
+.player-status-ready {
+  background: #0ba915;
+}
+.player-status-empty {
+  background: #8a988b;
+}
+.player-status-joined {
+  background: #e3950f;
+}
+
+
+.room-action-message-wrapper {
+  width: 55%;
+  display: flex;
+  flex: 1;
+  margin-bottom: 20px;
+  min-height: 0;
+}
+.room-message-container {
+  width: 60%;
+  padding: 0px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* min-height: 0; */
+  flex: 1;
+}
+.message-list {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+.message-form {
+  display: flex;
+  margin-top: 8px;
+}
+.message-form > input {
+  padding-left: 5px;
+  width: 100%;
+}
+.room-action-container {
+  width: 40%;
+  display: flex; 
+}
+
+.message-user {
+  padding: 0 5px 0 5px;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #eeeeee;
+}
+.message-text {
+  font-size: 1rem;
 }

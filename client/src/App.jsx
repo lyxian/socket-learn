@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 // import io from "socket.io-client";
 // import Messages from "./Messages";
 // import MessageInput from "./MessageInput";
@@ -15,8 +15,10 @@ import Room from "./components/Room";
 import "./App.css";
 
 // const socket = socketIO.connect(`${process.env.LOCALHOST}:${process.env.PORT}`);
+const UserContext = createContext();
 
 function App() {
+  const [username, setUsername] = useState("");
   // const username = localStorage.getItem("userName");
   // console.log(username);
 
@@ -44,18 +46,21 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/room/:id" element={<Room />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
+      <UserContext.Provider value={{ username, setUsername }}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/room/:roomId" element={<Room />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </UserContext.Provider>
     </div>
   );
 }
 
 export default App;
+export { UserContext };
 
 // import { useParams } from "react-router-dom";
 // const { name, price } = useParams();
