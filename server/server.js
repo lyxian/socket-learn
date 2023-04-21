@@ -14,8 +14,17 @@ const socket = require('socket.io');
 const fs = require('fs');
 
 // Retrieve JSON data and parse into JavaScript object
-const rawData = fs.readFileSync(FILE_NAME);
-const productData = JSON.parse(rawData);
+// const rawData = fs.readFileSync(FILE_NAME);
+// const db = JSON.parse(rawData);
+const db = {
+    "lobbies": [],
+    "players": []
+}
+
+fs.writeFile('server/data.json', JSON.stringify(db, null, space = 2), 'utf8', function (err) {
+    if (err) throw err;
+    console.log('db initialized');
+});
 
 app.use(cors());
 
@@ -29,8 +38,8 @@ const socketIO = socket(http, {
     // credentials: true
 });
 
-var chat = require('./chat');
-chat(socketIO);
+var startConnection = require('./lobby');
+startConnection(socketIO, db);
 
 http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
