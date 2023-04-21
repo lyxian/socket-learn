@@ -150,9 +150,10 @@ button {
 }
 .message-user {
   padding: 0 5px 0 5px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-style: italic;
-  color: #eeeeee;
+  font-weight: bold;
+  color: #8f3d3d;
 }
 .message-text {
   font-size: 1rem;

@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
 import { addBot, kickPlayer, readyPlayer } from "../hooks/RoomProps";
-import { PlayersContext } from "./Room";
+import { RoomContext } from "./Room";
 
-const RoomAction = ({ user }) => {
-  const { players, setPlayers } = useContext(PlayersContext);
+const RoomAction = () => {
+  const { socket, roomId, currentPlayer, players, setPlayers } =
+    useContext(RoomContext);
   const [addBotMode, setAddBotMode] = useState(false);
   const [kickPlayerMode, setKickPlayerMode] = useState(false);
 
@@ -11,6 +12,7 @@ const RoomAction = ({ user }) => {
     const updatedPlayers = readyPlayer([...players], user.name, getReady);
     console.log(updatedPlayers);
     setPlayers(updatedPlayers);
+    socket.emit("ready player", { user: user.name, roomId, getReady });
   };
 
   const handleAddBot = (index) => {
@@ -18,6 +20,7 @@ const RoomAction = ({ user }) => {
     console.log(index, updatedPlayers);
     setPlayers(updatedPlayers);
     setAddBotMode(!addBotMode);
+    socket.emit("add bot", { updatedPlayers, roomId });
   };
 
   const handleKickPlayer = (index) => {
@@ -25,6 +28,7 @@ const RoomAction = ({ user }) => {
     console.log(index, updatedPlayers);
     setPlayers(updatedPlayers);
     setKickPlayerMode(!kickPlayerMode);
+    socket.emit("kick player", { updatedPlayers, roomId });
   };
 
   const toggleAddBot = (e) => {
@@ -39,7 +43,7 @@ const RoomAction = ({ user }) => {
 
   return (
     <div className="room-action-wrapper">
-      {user.isHost ? (
+      {currentPlayer.isHost ? (
         <>
           <div className="room-action-choices">
             {addBotMode && (

@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRandomRoomId, roomExists } from "../hooks/RoomProps";
+import { UserContext } from "../App";
+
+import socketIO from "socket.io-client";
 
 const Lobby = ({ user, setHasUsername }) => {
+  const { socket, setSocket } = useContext(UserContext);
   const [toggleRoomInput, setToggleRoomInput] = useState(false);
   const [roomInput, setRoomInput] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const newSocket = socketIO.connect(
+      `${process.env.LOCALHOST}:${process.env.PORT}`
+    );
+    setSocket(newSocket);
+    newSocket.emit("new user", user);
+  }, [setSocket]);
 
   const handleChangeName = (e) => {
     navigate("/");
@@ -13,6 +25,7 @@ const Lobby = ({ user, setHasUsername }) => {
 
   const handleCreateRoom = (e) => {
     const roomId = getRandomRoomId();
+    socket.emit("new room", { user, roomId });
     console.log(roomId);
     navigate("/room/" + roomId);
   };
@@ -29,6 +42,7 @@ const Lobby = ({ user, setHasUsername }) => {
       return;
     }
     if (roomExists(updatedRoomInput)) {
+      socket.emit("join room", { user, roomId: updatedRoomInput });
       navigate("/room/" + updatedRoomInput);
     }
   };

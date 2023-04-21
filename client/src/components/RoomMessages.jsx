@@ -1,21 +1,29 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../App";
+import { RoomContext } from "./Room";
 
 const RoomMessages = () => {
+  const { socket, roomId, players, setPlayers } = useContext(RoomContext);
   const { username } = useContext(UserContext);
   const [messages, setMessages] = useState([]);
-
   const [messageInput, setMessageInput] = useState("");
+
+  useEffect(() => {
+    socket.on("send messages", (messageResponse) => {
+      setMessages(messageResponse);
+    });
+  }, [socket]);
+
   const submitForm = (e) => {
     e.preventDefault();
-    // socket.emit("message", value);
     const messageObj = {
       id: messages.length,
       user: username,
       value: messageInput,
     };
-    // console.log(messageObj);
-    setMessages([...messages, messageObj]);
+    const updatedMessages = [...messages, messageObj];
+    socket.emit("add message", { updatedMessages, roomId });
+    setMessages(updatedMessages);
     setMessageInput("");
   };
 
