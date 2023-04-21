@@ -55,3 +55,11 @@ export function kickPlayer(players, index) {
   players[index] = emptyPlayer;
   return players;
 }
+
+export function readyPlayer(players, playerName, getReady) {
+  const currentPlayer = players.find((player) => {
+    return player.name === playerName;
+  });
+  currentPlayer.status = getReady ? "ready" : "waiting";
+  return players;
+}

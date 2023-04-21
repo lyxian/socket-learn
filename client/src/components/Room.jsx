@@ -43,7 +43,7 @@ const Room = ({ socket }) => {
   return (
     <>
       <div className="room-wrapper">
-        <div className="room-info-container">Game Lobby ({roomId})</div>
+        <div className="room-info-container">Game Lobby -- {roomId}</div>
         <PlayersContext.Provider value={{ players, setPlayers }}>
           <div className="room-players-container">
             {players.map((player, index) => {
@@ -54,7 +54,7 @@ const Room = ({ socket }) => {
           </div>
           <div className="room-action-message-wrapper">
             <RoomMessages />
-            <RoomAction user={players[0]} />
+            <RoomAction user={players[1]} />
           </div>
         </PlayersContext.Provider>
       </div>

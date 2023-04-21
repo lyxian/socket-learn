@@ -1,11 +1,17 @@
 import React, { useState, useContext } from "react";
-import { addBot, kickPlayer } from "../hooks/RoomProps";
+import { addBot, kickPlayer, readyPlayer } from "../hooks/RoomProps";
 import { PlayersContext } from "./Room";
 
 const RoomAction = ({ user }) => {
   const { players, setPlayers } = useContext(PlayersContext);
   const [addBotMode, setAddBotMode] = useState(false);
   const [kickPlayerMode, setKickPlayerMode] = useState(false);
+
+  const handleReadyPlayer = (getReady) => {
+    const updatedPlayers = readyPlayer([...players], user.name, getReady);
+    console.log(updatedPlayers);
+    setPlayers(updatedPlayers);
+  };
 
   const handleAddBot = (index) => {
     const updatedPlayers = addBot([...players], index);
@@ -112,8 +118,18 @@ const RoomAction = ({ user }) => {
       ) : (
         <>
           <div className="room-action-container">
-            <button className="action-button top-button">ready</button>
-            <button className="action-button">joined</button>
+            <button
+              className="action-button top-button"
+              onClick={(e) => handleReadyPlayer(true)}
+            >
+              ready
+            </button>
+            <button
+              className="action-button action-button-waiting"
+              onClick={(e) => handleReadyPlayer(false)}
+            >
+              waiting
+            </button>
           </div>
         </>
       )}

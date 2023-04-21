@@ -100,7 +100,7 @@ button {
 }
 .player-status-ready,
 .player-status-empty,
-.player-status-joined {
+.player-status-waiting {
   /* border: 2px solid #fff; */
   border-radius: 20px;
   padding: 5px 10px;
@@ -114,10 +114,9 @@ button {
 .player-status-empty {
   background: #8a988b;
 }
-.player-status-joined {
+.player-status-waiting {
   background: #e3950f;
 }
-
 
 .room-action-message-wrapper {
   width: 55%;
@@ -183,6 +182,9 @@ button {
   cursor: pointer;
   color: #fff;
   background-color: rgb(67, 143, 67);
+}
+.action-button-waiting {
+  background: #e3950f;
 }
 .top-button {
   margin-bottom: 10px;
