@@ -85,7 +85,7 @@ button {
 }
 .room-players-container {
   width: 55%;
-  padding: 40px 0px;
+  padding: 20px 0px;
   display: flex;
   align-items: flex-start;
   justify-content: space-around;
@@ -149,11 +149,6 @@ button {
   padding-left: 5px;
   width: 100%;
 }
-.room-action-container {
-  width: 40%;
-  display: flex; 
-}
-
 .message-user {
   padding: 0 5px 0 5px;
   font-size: 0.8rem;
@@ -162,4 +157,65 @@ button {
 }
 .message-text {
   font-size: 1rem;
+}
+
+.room-action-wrapper {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.room-action-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.action-button {
+  width: 110px;
+  margin: 0px;
+  padding: 5px;
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background-color: rgb(67, 143, 67);
+}
+.top-button {
+  margin-bottom: 10px;
+}
+.room-action-choices {
+  height: 35%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.choice-button-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+}
+.choice-message {
+  width: 100%;
+  text-align: center;
+}
+.choice-button {
+  width: 80px;
+  margin: 5px;
+  padding: 5px;
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background-color: rgb(67, 143, 67);
+}
+.choice-invalid {
+  cursor: auto;
+  background-color: #8a988b;
 }

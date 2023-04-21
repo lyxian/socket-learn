@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../App";
@@ -6,12 +6,21 @@ import RoomPlayerCard from "./RoomPlayerCard";
 import RoomAction from "./RoomAction";
 import RoomMessages from "./RoomMessages";
 
-import { players } from "../data";
+import { samplePlayers } from "../data";
+
+const PlayersContext = createContext();
 
 const Room = ({ socket }) => {
+  const navigate = useNavigate();
   const { roomId } = useParams();
   const { username } = useContext(UserContext);
-  const navigate = useNavigate();
+  const [players, setPlayers] = useState(samplePlayers);
+
+  // useEffect(() => {
+  //   const newSocket = io(`http://${window.location.hostname}:4000`);
+  //   setSocket(newSocket);
+  //   return () => newSocket.close();
+  // }, [players]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,15 +44,19 @@ const Room = ({ socket }) => {
     <>
       <div className="room-wrapper">
         <div className="room-info-container">Game Lobby ({roomId})</div>
-        <div className="room-players-container">
-          {players.map((player, index) => {
-            return <RoomPlayerCard player={player} index={index} key={index} />;
-          })}
-        </div>
-        <div className="room-action-message-wrapper">
-          <RoomMessages />
-          <RoomAction user={players[0]} />
-        </div>
+        <PlayersContext.Provider value={{ players, setPlayers }}>
+          <div className="room-players-container">
+            {players.map((player, index) => {
+              return (
+                <RoomPlayerCard player={player} index={index} key={index} />
+              );
+            })}
+          </div>
+          <div className="room-action-message-wrapper">
+            <RoomMessages />
+            <RoomAction user={players[0]} />
+          </div>
+        </PlayersContext.Provider>
       </div>
       <div className="username-wrapper">
         <div className="username-container">
@@ -58,3 +71,4 @@ const Room = ({ socket }) => {
 };
 
 export default Room;
+export { PlayersContext };
